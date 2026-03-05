@@ -1,0 +1,23 @@
+body{
+  background:var(--gray-900);
+  color:var(--gray-100);
+}
+
+a{
+  text-decoration:none;
+  color:inherit;
+}
+
+img{
+  max-width:100%;
+  display:block;
+}
+
+ul{
+  list-style:none;
+}
+
+button{
+  cursor:pointer;
+  border:none;
+}

@@ -1,0 +1,28 @@
+/* i just reset the default behavior/render of elements in the browser
+if anyone wonders*/
+
+*,
+*::before,
+*::after{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+}
+
+html{
+    font-size:16px;
+    scroll-behavior:smooth; /* this gonna make things interseting, 
+    "may remove it later"
+    -> kindely remind me if i used an animation library to remove it <3 */
+}
+
+body{
+    width:100%;
+    min-height:100vh;
+    line-height:1.5;
+    font-family: system-ui, -apple-system, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    align-content:center;
+}

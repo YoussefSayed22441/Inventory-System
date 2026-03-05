@@ -1,0 +1,25 @@
+:root{
+
+  /* colors */
+  --primary:#f8f8f8; 
+  --secondary:#0b0a0a;
+  --accent:#a0a0a0; 
+  /* sorry for hurting your eyes, just till I figure out the 
+  cool color pallete that gives the vibe i need ;) */ 
+
+  --white:#fff;
+  --black:#000;
+
+  --gray-100:#f3f4f6;
+  --gray-500:#6b7280;
+  --gray-900:#111827;
+
+  /* spacing */
+  --space-sm:8px;
+  --space-md:16px;
+  --space-lg:32px;
+
+  /* border radius */
+  --radius:8px;
+
+}
