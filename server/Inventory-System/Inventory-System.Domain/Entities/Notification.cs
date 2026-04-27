@@ -1,17 +1,19 @@
-﻿using Inventory_System.Domain.Helpers;
+﻿using Inventory_System.Domain.Entities;
+using Inventory_System.Domain.Entities.Base;
+using Inventory_System.Domain.Helpers;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Security.Principal;
 using System.Text;
 
 namespace Inventory_System.Domain.Entities
 {
     [Table("Notifications")]
-    public class Notification
+    public class Notification : BaseEntity
     {
-        [Key]
-        public Guid Id { get; set; }// we want to use Guid for uniqueness
+        #region Props
         [Required]
         [MaxLength(1000)]
         public string Message { get; set; } = string.Empty;
@@ -19,13 +21,12 @@ namespace Inventory_System.Domain.Entities
         [MaxLength(200)]
         public string Title { get; set; } = string.Empty;
         [Required]
-        public NotificationType Type { get; set; } 
+        public NotificationType Type { get; set; }
+        [Required]
         public NotificationPriority Priority { get; set; } 
         public string? Notes { get; set; }
         public bool IsRead { get; set; } = false;
-        [Required]
-        public DateTime CreatedAt { get; set; }
-
+        #endregion
 
         #region Relation With Product
         // Foreign Key (nullable — general notifications may not link to a product)
@@ -36,8 +37,8 @@ namespace Inventory_System.Domain.Entities
         public Product? Product { get; set; } = null!; // Navigation Property
         #endregion
 
-        /////////////////////////////////
-        // don't forget the user relation
-        /////////////////////////////////
     }
+
 }
+
+
