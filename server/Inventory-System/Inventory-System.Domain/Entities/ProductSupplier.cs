@@ -7,24 +7,22 @@ using System.Text;
 
 namespace Inventory_System.Domain.Entities
 {
-    public class ProductSupplier : BaseEntity
+    public class ProductSupplier 
     {
-        #region Props
         public Guid ProductId { get; set; }
         public Guid SupplierId { get; set; }
-       
-        [Column(TypeName = "decimal(18,2)")]
-        [Range(0, double.MaxValue, ErrorMessage = "Cost must be a positive value")]
         public decimal Cost { get; set; }
-        #endregion
 
-        #region Realtion with Product
+
+        #region Relation with Product
         [ForeignKey(nameof(ProductId))]
+        [InverseProperty(nameof(Entities.Product.ProductSuppliers))]
         public Product Product { get; set; }
         #endregion
 
-        #region Realtion with Supplier
+        #region Relation with Supplier
         [ForeignKey(nameof(SupplierId))]
+        [InverseProperty(nameof(Entities.Supplier.ProductSuppliers))]
         public Supplier Supplier { get; set; }
         #endregion
 

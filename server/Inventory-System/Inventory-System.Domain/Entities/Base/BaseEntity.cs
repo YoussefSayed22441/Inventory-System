@@ -10,42 +10,12 @@ namespace Inventory_System.Domain.Entities.Base
     /// </summary>
     public abstract class BaseEntity 
     {
-        #region Props
-        // <summary>
-        /// Primary key for the entity
-        /// </summary>
-        [Key]
-        public Guid Id { get; set; }
-
-        /// <summary>
-        /// Indicates whether the entity is deleted
-        /// </summary>
-        [Required]
-        public bool IsDeleted { get; set; }
-
-        /// <summary>
-        /// UTC timestamp when the entity was created
-        /// </summary>
-        [Required]
+        public Guid Id { get; set; } 
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
-
-        /// <summary>
-        /// Username or identifier of the user who created the entity
-        /// </summary>
-        [Required]
-        [StringLength(50)]
-        public string CreatedBy { get; set; } = string.Empty;
-
-        /// <summary>
-        /// UTC timestamp when the entity was last updated
-        /// </summary>
-        public DateTime? UpdatedAt { get; set; }
-
-        /// <summary>
-        /// Username or identifier of the user who last updated the entity
-        /// </summary>
-        [StringLength(50)]
+        public string CreatedBy { get; set; }
+        public DateTime? UpdatedAt { get; set; } 
         public string? UpdatedBy { get; set; }
-        #endregion
+        public bool IsDeleted { get; set; }
+  
     }
 }

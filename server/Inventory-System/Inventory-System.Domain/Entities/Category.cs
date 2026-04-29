@@ -7,27 +7,19 @@ using System.Text;
 
 namespace Inventory_System.Domain.Entities
 {
-    [Table("Categories")]
     public class Category : BaseEntity
     {
-        #region Constructors
         public Category()
         {
             Products = new HashSet<Product>();
         }
-        #endregion
-
-        #region Props
-        [Required]
-        [MaxLength(100)]
-        public string CategoryName { get; set; } = string.Empty;
-        [MaxLength(500)]
+        public string CategoryName { get; set; } 
         public string? Description { get; set; }
-        #endregion
+
 
         #region Relation With Product
         [InverseProperty(nameof(Product.Category))]
-        public ICollection<Product> Products { get; set; } = new List<Product>();
+        public ICollection<Product> Products { get; set; }
         #endregion
 
 

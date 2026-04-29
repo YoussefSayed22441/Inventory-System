@@ -8,29 +8,23 @@ using System.Text;
 
 namespace Inventory_System.Domain.Entities
 {
-    [Table("StockHistories")]
     public class StockHistory :BaseEntity
     {
-        #region Props
-        public Guid ProductId { get; set; }
         public int Quantity { get; set; }
-        public Guid? SupplierId { get; set; }
-
-        [Required]
         public TransactionType Type { get; set; } 
-       
-        [MaxLength(500)]
         public string? Notes { get; set; }
-        #endregion
+
 
         #region Relation with Product
+        public Guid ProductId { get; set; }
         [ForeignKey(nameof(ProductId))]
-        public Product Product { get; set; } // Navigation
+        public Product Product { get; set; } // Navigation property
         #endregion
 
         #region Relation with Supplier
+        public Guid? SupplierId { get; set; }
         [ForeignKey(nameof(SupplierId))]
-        public Supplier? Supplier { get; set; }
+        public Supplier? Supplier { get; set; } // Navigation property
         #endregion
 
     }

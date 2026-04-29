@@ -10,23 +10,15 @@ using System.Text;
 
 namespace Inventory_System.Domain.Entities
 {
-    [Table("Notifications")]
     public class Notification : BaseEntity
     {
-        #region Props
-        [Required]
-        [MaxLength(1000)]
-        public string Message { get; set; } = string.Empty;
-        [Required]
-        [MaxLength(200)]
-        public string Title { get; set; } = string.Empty;
-        [Required]
+        public string Message { get; set; } 
+        public string Title { get; set; } 
         public NotificationType Type { get; set; }
-        [Required]
         public NotificationPriority Priority { get; set; } 
         public string? Notes { get; set; }
-        public bool IsRead { get; set; } = false;
-        #endregion
+        public bool IsRead { get; set; }
+    
 
         #region Relation With Product
         // Foreign Key (nullable — general notifications may not link to a product)
@@ -34,7 +26,7 @@ namespace Inventory_System.Domain.Entities
 
         [ForeignKey(nameof(ProductId))]
         [InverseProperty(nameof(Product.Notifications))]
-        public Product? Product { get; set; } = null!; // Navigation Property
+        public Product? Product { get; set; }  // Navigation Property
         #endregion
 
     }

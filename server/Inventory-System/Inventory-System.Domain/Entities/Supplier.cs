@@ -7,32 +7,27 @@ using System.Text;
 
 namespace Inventory_System.Domain.Entities
 {
-    [Table("Suppliers")]
     public class Supplier : BaseEntity
     {
-        #region Props
-        [Required]
-        [MaxLength(200)]
-        public string Name { get; set; } = string.Empty;
-        
-        [MaxLength(100)]
-        [EmailAddress]
-        public string? Email { get; set; }
-        
-        [MaxLength(20)]
-        [Phone]
-        public string? Phone { get; set; }
-        
-        [MaxLength(500)]
-        public string? Address { get; set; }
-        #endregion
+        public Supplier()
+        {
+            ProductSuppliers = new HashSet<ProductSupplier>();
+            StockHistories = new HashSet<StockHistory>();
+        }
+
+        public string Name { get; set; } 
+        public string Email { get; set; }  
+        public string Phone { get; set; }     
+        public string Address { get; set; }
+
+
 
         #region Relation with ProductSuppliers
-        public ICollection<ProductSupplier> ProductSuppliers { get; set; } = new List<ProductSupplier>();
+        public ICollection<ProductSupplier> ProductSuppliers { get; set; } 
         #endregion
 
         #region Relation with StockHistories 
-        public ICollection<StockHistory> StockHistories { get; set; } = new List<StockHistory>();
+        public ICollection<StockHistory> StockHistories { get; set; } 
         #endregion
     }
 }
