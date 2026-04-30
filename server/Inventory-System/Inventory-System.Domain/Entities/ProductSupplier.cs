@@ -11,7 +11,7 @@ namespace Inventory_System.Domain.Entities
     {
         public Guid ProductId { get; set; }
         public Guid SupplierId { get; set; }
-        public decimal Cost { get; set; }
+        public decimal CostPrice { get; set; }
 
 
         #region Relation with Product
