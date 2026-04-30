@@ -8,7 +8,8 @@ namespace Inventory_System.Domain.Helpers
     {
         LowStock,
         OutOfStock,
+        OverStock,
         Expired,
-        General
+        Normal
     }
 }
