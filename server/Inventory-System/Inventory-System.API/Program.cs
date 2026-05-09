@@ -1,5 +1,7 @@
 
 using Inventory_System.Infrastructure;
+using Inventory_System.Core;
+using Inventory_System.Service;
 
 namespace Inventory_System.API
 {
@@ -10,13 +12,20 @@ namespace Inventory_System.API
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
-            var ConnectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-            builder.Services.AddInfrastructureDependencies(ConnectionString);
-
             builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
+
+
+            #region dependency injections
+            builder.Services.AddInfrastructureDependencies(builder.Configuration)
+                .AddCoreDependencies()
+                .AddServiceDependencies();
+            #endregion
+
+
+
 
             var app = builder.Build();
 
