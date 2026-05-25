@@ -21,10 +21,12 @@ namespace Inventory_System.Infrastructure
             services.AddScoped<ICategoryRepo, CategoryRepo>();
             services.AddScoped(typeof(IGenericRepo<>), typeof(GenericRepo<>));
 
+            services.AddScoped<ISupplierRepo,SupplierRepo>();
+
 
             //Connect To DB
             services.AddDbContext<InventoryDbContext>(options =>
-             options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
+            options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
      
             return services;
         }
