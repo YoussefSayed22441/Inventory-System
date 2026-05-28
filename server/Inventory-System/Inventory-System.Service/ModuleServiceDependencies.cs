@@ -16,6 +16,8 @@ namespace Inventory_System.Service
         {
             Service.AddScoped<ICategoryService, CategoryService>();
             Service.AddScoped<ISupplierService, SupplierService>();
+            Service.AddScoped<IProductService, ProductService>();
+
             return Service;
         }
     }

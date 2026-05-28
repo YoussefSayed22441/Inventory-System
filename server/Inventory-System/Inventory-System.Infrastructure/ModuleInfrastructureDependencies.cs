@@ -22,6 +22,7 @@ namespace Inventory_System.Infrastructure
             services.AddScoped(typeof(IGenericRepo<>), typeof(GenericRepo<>));
 
             services.AddScoped<ISupplierRepo,SupplierRepo>();
+            services.AddScoped<IProductRepo, ProductRepo>();
 
 
             //Connect To DB
