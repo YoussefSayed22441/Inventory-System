@@ -27,6 +27,8 @@ namespace Inventory_System.Infrastructure.Data
 
             modelBuilder.Entity<ProductSupplier>()
                 .HasKey(ps => new { ps.ProductId, ps.SupplierId });
+            modelBuilder.Entity<Product>().Property(p => p.CostPrice).HasPrecision(18, 2);
+            modelBuilder.Entity<Product>().Property(p => p.SellingPrice).HasPrecision(18, 2);
         }
 
     }
