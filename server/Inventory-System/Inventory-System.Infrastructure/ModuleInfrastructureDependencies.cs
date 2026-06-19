@@ -1,5 +1,8 @@
 ﻿using Inventory_System.Infrastructure.Data;
+using Inventory_System.Infrastructure.Interfaces;
+using Inventory_System.Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
@@ -12,9 +15,17 @@ namespace Inventory_System.Infrastructure
 {
     public static class ModuleInfrastructureDependencies
     {
-        public static IServiceCollection AddInfrastructureDependencies(this IServiceCollection services,string connectionstring )
+        public static IServiceCollection AddInfrastructureDependencies(this IServiceCollection services, IConfiguration configuration)
         {
-            services.AddDbContext<InventoryDbContext>(option => option.UseSqlServer(connectionstring));
+       
+            services.AddScoped<ICategoryRepo, CategoryRepo>();
+            services.AddScoped(typeof(IGenericRepo<>), typeof(GenericRepo<>));
+
+
+            //Connect To DB
+            services.AddDbContext<InventoryDbContext>(options =>
+             options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
+     
             return services;
         }
     }
