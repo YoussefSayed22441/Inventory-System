@@ -9,6 +9,9 @@
 
   <ItemGroup>
     <Folder Include="Features\Categories\Commands\DTOs\" />
+    <Folder Include="Features\Notifications\Commands\DTOs\" />
+    <Folder Include="Features\Suppliers\Commands\Validators\" />
+    <Folder Include="Features\Suppliers\Queries\" />
   </ItemGroup>
 
   <ItemGroup>

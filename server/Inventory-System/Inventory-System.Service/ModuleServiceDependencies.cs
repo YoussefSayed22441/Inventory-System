@@ -15,7 +15,9 @@ namespace Inventory_System.Service
         public static IServiceCollection AddServiceDependencies(this IServiceCollection Service)
         {
             Service.AddScoped<ICategoryService, CategoryService>();
-           
+            Service.AddScoped<ISupplierService, SupplierService>();
+            Service.AddScoped<IProductService, ProductService>();
+
             return Service;
         }
     }
