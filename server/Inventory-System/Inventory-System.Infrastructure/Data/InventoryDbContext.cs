@@ -1,10 +1,13 @@
 ﻿
 using Inventory_System.Domain.Entities;
+using Inventory_System.Infrastructure.Identity;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace Inventory_System.Infrastructure.Data
 {
-    public class InventoryDbContext :DbContext
+    public class InventoryDbContext : IdentityDbContext<ApplicationUser>
     {
         public InventoryDbContext (DbContextOptions<InventoryDbContext> options)     : base(options)
         {
