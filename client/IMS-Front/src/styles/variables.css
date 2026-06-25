@@ -1,11 +1,47 @@
 :root{
 
   /* colors */
-  --primary:#f8f8f8; 
-  --secondary:#0b0a0a;
-  --accent:#a0a0a0; 
-  /* sorry for hurting your eyes, just till I figure out the 
-  cool color pallete that gives the vibe i need ;) */ 
+
+    /* I think i found the right recipe buddy :D */ 
+
+  /* ==========================================================================
+     1. BACKGROUND & CANVAS (The Deep Foundation)
+     Use a radial or linear gradient to create the 'stage' effect behind 
+     your 3D models.
+     ========================================================================== */
+  --bg-deep: #0D1117;           /* Absolute darkest areas */
+  --bg-stage-gradient: radial-gradient(circle at center, #1E2638 0%, #0B0F19 100%);
+
+  /* ==========================================================================
+     2. GLASSMORPHISM SURFACES (Overlay Panels & Cards)
+     Requires `backdrop-filter: blur(20px)` on the container and heavy 
+     shadows to create depth. See implementation note below.
+     ========================================================================== */
+  --glass-surface: rgba(22, 27, 38, 0.45); /* The frosted glass pane */
+  --glass-border: rgba(255, 255, 255, 0.08); /* The subtle white edge */
+  --glass-shadow: 0 10px 40px rgba(0, 0, 0, 0.5); /* Heavy shadow for floating look */
+
+  /* ==========================================================================
+     3. THE NEON ACCENTS (Active States, Alerts, Glows)
+     Use these colors with `box-shadow` or `drop-shadow` for the neon look.
+     ========================================================================== */
+  --neon-orange: #FF6A00;       /* The saturated glow core */
+  --neon-orange-hover: #E05E00; /* Subtle hover state */
+  --neon-orange-dim: rgba(255, 106, 0, 0.2); /* For soft light projections */
+  --neon-orange-glow: 0 0 15px rgba(255, 106, 0, 0.6); /* Standard glow effect */
+
+  /* Optional Secondary Accent (For data contrast, like charts) */
+  --neon-blue-data: #00E5FF;
+  --neon-blue-dim: rgba(0, 229, 255, 0.15);
+
+  /* ==========================================================================
+     4. TYPOGRAPHY & INTERFACE ELEMENTS (Foreground)
+     ========================================================================== */
+  --text-pure-white: #FFFFFF;    /* Main headers, titles, high visibility */
+  --text-primary: #F3F4F6;       /* Default text on dark surfaces */
+  --text-muted: #9CA3AF;        /* Subdued text (like SKU details) */
+  --icon-inactive: #6B7280;     /* Inactive sidebar icons */
+/* anything unclear or feel confused just DM me Abdelrahman 🤙*/
 
   --white:#fff;
   --black:#000;

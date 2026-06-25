@@ -1,0 +1,95 @@
+.sidebar {
+  position: fixed;
+  left: 0;
+  top: 0;
+  /* Navbar height */
+  height: 100%;
+  width: 80px;
+  background: var(--glass-surface);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--glass-shadow);
+  -webkit-backdrop-filter: blur(20px); /* For Safari support */
+  backdrop-filter: blur(20px);
+  transition: width 0.3s ease-in-out;
+  z-index: 40;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding-top: 24px;
+  padding-bottom: 24px;
+}
+
+.sidebar:hover {
+  width: 256px;
+}
+
+.sidebar-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 0 12px;
+  width: 100%;
+}
+
+.sidebar-link {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 12px 12px;
+  border-radius: 12px;
+  transition: all 0.3s ease-in-out;
+  color: var(--icon-inactive);
+  border-left: 2px solid transparent;
+  text-decoration: none;
+}
+
+.sidebar-link:hover {
+  color: var(--neon-orange-hover);
+  background-color: rgba(255, 255, 255, 0.04);
+}
+
+.sidebar-link.active {
+  /* background: linear-gradient(90deg, rgba(0, 210, 255, 0.15) 0%, transparent 100%); */
+  color: var(--neon-orange);
+  border-left-color: var(--neon-orange);
+  /* For SVG icons and complex text, use filter instead of box-shadow */
+  filter: drop-shadow(0 0 8px var(--neon-orange));
+}
+
+.sidebar-icon-container {
+  flex-shrink: 0;
+  width: 32px;
+  display: flex;
+  justify-content: center;
+}
+
+.sidebar-icon {
+  transition: filter 0.3s ease-in-out;
+}
+
+/* .sidebar-link.active .sidebar-icon {
+  filter: drop-shadow(0 0 8px rgba(0, 210, 255, 0.8));
+} */
+
+.sidebar-text {
+  white-space: nowrap;
+  font-weight: 500;
+  font-size: 1.125rem;
+  line-height: 1;
+  opacity: 0;
+  transition: opacity 0.3s ease-in-out;
+}
+
+.sidebar:hover .sidebar-text {
+  opacity: 1;
+}
+
+.sidebar-link.active .sidebar-text {
+  color: var(--neon-orange);
+  
+  /* For SVG icons and complex text, use filter instead of box-shadow */
+  /* filter: drop-shadow(0 0 8px var(--neon-orange)); */
+
+}

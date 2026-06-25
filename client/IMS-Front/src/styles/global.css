@@ -1,6 +1,6 @@
 body{
-  background:var(--gray-900);
-  color:var(--gray-100);
+  background:var(--bg-stage-gradient);
+  color:var(--text-primary);
 }
 
 a{
