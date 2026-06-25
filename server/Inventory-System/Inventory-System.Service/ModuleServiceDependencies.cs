@@ -18,6 +18,7 @@ namespace Inventory_System.Service
             Service.AddScoped<ISupplierService, SupplierService>();
             Service.AddScoped<IProductService, ProductService>();
             Service.AddScoped<IProductSupplierService, ProductSupplierService>();
+            Service.AddScoped<INotificationService, NotificationService>();
 
             return Service;
         }
