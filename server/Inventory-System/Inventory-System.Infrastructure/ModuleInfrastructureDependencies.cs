@@ -22,9 +22,9 @@ namespace Inventory_System.Infrastructure
        
             services.AddScoped<ICategoryRepo, CategoryRepo>();
             services.AddScoped(typeof(IGenericRepo<>), typeof(GenericRepo<>));
-
             services.AddScoped<ISupplierRepo,SupplierRepo>();
             services.AddScoped<IProductRepo, ProductRepo>();
+            services.AddScoped<IProductSupplierRepo, ProductSupplierRepo>();
             services.AddScoped<INotificationRepo, NotificationRepo>();
 
 

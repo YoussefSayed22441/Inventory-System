@@ -7,12 +7,11 @@ using System.Text;
 
 namespace Inventory_System.Domain.Entities
 {
-    public class ProductSupplier 
+    public class ProductSupplier : BaseEntity
     {
         public Guid ProductId { get; set; }
         public Guid SupplierId { get; set; }
         public decimal CostPrice { get; set; }
-
 
         #region Relation with Product
         [ForeignKey(nameof(ProductId))]
@@ -25,6 +24,5 @@ namespace Inventory_System.Domain.Entities
         [InverseProperty(nameof(Entities.Supplier.ProductSuppliers))]
         public Supplier Supplier { get; set; }
         #endregion
-
     }
 }
