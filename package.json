@@ -1,7 +1,0 @@
-{
-  "dependencies": {
-    "motion": "^12.42.0",
-    "react-redux": "^9.3.0",
-    "three": "^0.185.0"
-  }
-}
