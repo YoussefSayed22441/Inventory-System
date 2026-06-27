@@ -22,6 +22,8 @@ namespace Inventory_System.Infrastructure.Data
         public DbSet<ProductSupplier> ProductSuppliers  { get; set; }
         public DbSet<StockHistory> StockHistories { get; set; }
 
+        public DbSet<UserRefreshToken> UserRefreshTokens { get; set; }
+
 
         // Configure the model and apply configurations
         protected override void OnModelCreating(ModelBuilder modelBuilder)

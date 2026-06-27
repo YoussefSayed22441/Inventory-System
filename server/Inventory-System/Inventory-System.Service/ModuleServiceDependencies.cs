@@ -19,6 +19,8 @@ namespace Inventory_System.Service
             Service.AddScoped<IProductService, ProductService>();
             Service.AddScoped<INotificationService, NotificationService>();
 
+            Service.AddTransient<IAuthenticationService, AuthenticationService>();
+
             return Service;
         }
     }

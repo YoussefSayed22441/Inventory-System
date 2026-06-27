@@ -2,10 +2,12 @@
 using Inventory_System.Infrastructure.Identity;
 using Inventory_System.Infrastructure.Interfaces;
 using Inventory_System.Infrastructure.Repositories;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,11 +23,12 @@ namespace Inventory_System.Infrastructure
         {
        
             services.AddScoped<ICategoryRepo, CategoryRepo>();
-            services.AddScoped(typeof(IGenericRepo<>), typeof(GenericRepo<>));
-
             services.AddScoped<ISupplierRepo,SupplierRepo>();
             services.AddScoped<IProductRepo, ProductRepo>();
             services.AddScoped<INotificationRepo, NotificationRepo>();
+            services.AddScoped(typeof(IGenericRepo<>), typeof(GenericRepo<>));
+
+            services.AddTransient<IRefreshTokenRepo, RefreshTokenRepo>();
 
 
             //Connect To DB
@@ -46,6 +49,31 @@ namespace Inventory_System.Infrastructure
             })
            .AddEntityFrameworkStores<InventoryDbContext>()
            .AddDefaultTokenProviders();
+
+
+
+
+            services.AddAuthentication(option =>
+            {
+                option.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                option.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+              .AddJwtBearer(option =>
+              {
+                  option.TokenValidationParameters = new TokenValidationParameters()
+                  {
+                      ValidateIssuer = true,
+                      ValidIssuer = configuration["JWT:Issuer"],
+                      ValidateAudience = true,
+                      ValidAudience = configuration["JWT:Audience"],
+                      ValidateLifetime = true,
+                      ValidateIssuerSigningKey = true,
+                      IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JWT:Key"]!)),
+
+                      ClockSkew = TimeSpan.Zero
+                  };
+
+              });
 
 
             return services;
