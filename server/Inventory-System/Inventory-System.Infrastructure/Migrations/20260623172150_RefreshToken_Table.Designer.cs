@@ -4,6 +4,7 @@ using Inventory_System.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Inventory_System.Infrastructure.Migrations
 {
     [DbContext(typeof(InventoryDbContext))]
-    partial class InventoryDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260623172150_RefreshToken_Table")]
+    partial class RefreshToken_Table
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -53,7 +56,7 @@ namespace Inventory_System.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Categories", (string)null);
+                    b.ToTable("Categories");
                 });
 
             modelBuilder.Entity("Inventory_System.Domain.Entities.Notification", b =>
@@ -105,7 +108,7 @@ namespace Inventory_System.Infrastructure.Migrations
 
                     b.HasIndex("ProductId");
 
-                    b.ToTable("Notifications", (string)null);
+                    b.ToTable("Notifications");
                 });
 
             modelBuilder.Entity("Inventory_System.Domain.Entities.Product", b =>
@@ -170,7 +173,7 @@ namespace Inventory_System.Infrastructure.Migrations
 
                     b.HasIndex("CategoryId");
 
-                    b.ToTable("Products", (string)null);
+                    b.ToTable("Products");
                 });
 
             modelBuilder.Entity("Inventory_System.Domain.Entities.ProductSupplier", b =>
@@ -184,30 +187,11 @@ namespace Inventory_System.Infrastructure.Migrations
                     b.Property<decimal>("CostPrice")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("CreatedBy")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<Guid>("Id")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("UpdatedBy")
-                        .HasColumnType("nvarchar(max)");
-
                     b.HasKey("ProductId", "SupplierId");
 
                     b.HasIndex("SupplierId");
 
-                    b.ToTable("ProductSuppliers", (string)null);
+                    b.ToTable("ProductSuppliers");
                 });
 
             modelBuilder.Entity("Inventory_System.Domain.Entities.StockHistory", b =>
@@ -253,7 +237,7 @@ namespace Inventory_System.Infrastructure.Migrations
 
                     b.HasIndex("SupplierId");
 
-                    b.ToTable("StockHistories", (string)null);
+                    b.ToTable("StockHistories");
                 });
 
             modelBuilder.Entity("Inventory_System.Domain.Entities.Supplier", b =>
@@ -296,7 +280,7 @@ namespace Inventory_System.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Suppliers", (string)null);
+                    b.ToTable("Suppliers");
                 });
 
             modelBuilder.Entity("Inventory_System.Infrastructure.Identity.ApplicationUser", b =>
@@ -408,7 +392,7 @@ namespace Inventory_System.Infrastructure.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("UserRefreshTokens", (string)null);
+                    b.ToTable("UserRefreshTokens");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>

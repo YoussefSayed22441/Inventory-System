@@ -1,13 +1,16 @@
 
-using Inventory_System.Infrastructure;
 using Inventory_System.Core;
+using Inventory_System.Infrastructure;
+using Inventory_System.Infrastructure.Data;
+using Inventory_System.Infrastructure.Identity;
 using Inventory_System.Service;
+using Microsoft.AspNetCore.Identity;
 
 namespace Inventory_System.API
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
 
@@ -29,6 +32,16 @@ namespace Inventory_System.API
 
             var app = builder.Build();
 
+            using (var scope = app.Services.CreateScope())
+            {
+                var services = scope.ServiceProvider;
+                //// Ask CLR to Create Object From User-Role Manager Explicitly
+                var userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
+                var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
+                await RoleSeed.SeedRoleAsync(roleManager);
+                await AppIdentityDbContextSeed.SeedUserAsync(userManager);
+            }
+
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {
@@ -38,6 +51,7 @@ namespace Inventory_System.API
 
             app.UseHttpsRedirection();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
 
