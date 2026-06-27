@@ -32,6 +32,8 @@ public CreateProductCommandHandler(IProductService productService, ICategoryServ
                 return Result<ProductDto>.Failure("Category Not Found", ResultStatus.NotFound);
 
             var product = _mapper.Map<Product>(request);
+            product.CreatedBy = request.CreatedBy;
+
             var result = await _productService.AddAsync(product);
             // Because AddAsync makes sure of the Uniqueness of the SKU 
             if (result == null)
