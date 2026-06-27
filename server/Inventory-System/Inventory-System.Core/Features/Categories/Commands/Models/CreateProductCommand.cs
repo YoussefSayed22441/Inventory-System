@@ -22,6 +22,6 @@ namespace Inventory_System.Core.Features.Categories.Commands.Models
         public Guid CategoryId { get; set; }
 
         // Temporary default - replace with authenticated user once JWT/Auth is implemented
-        public string CreatorBy { get; set; } = "System";
+        public string CreatedBy { get; set; } = "System";
     }
 }
