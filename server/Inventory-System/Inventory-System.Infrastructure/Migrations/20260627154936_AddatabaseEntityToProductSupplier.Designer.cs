@@ -4,6 +4,7 @@ using Inventory_System.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Inventory_System.Infrastructure.Migrations
 {
     [DbContext(typeof(InventoryDbContext))]
-    partial class InventoryDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260627154936_AddatabaseEntityToProductSupplier")]
+    partial class AddatabaseEntityToProductSupplier
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -53,7 +56,7 @@ namespace Inventory_System.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Categories", (string)null);
+                    b.ToTable("Categories");
                 });
 
             modelBuilder.Entity("Inventory_System.Domain.Entities.Notification", b =>
@@ -105,7 +108,7 @@ namespace Inventory_System.Infrastructure.Migrations
 
                     b.HasIndex("ProductId");
 
-                    b.ToTable("Notifications", (string)null);
+                    b.ToTable("Notifications");
                 });
 
             modelBuilder.Entity("Inventory_System.Domain.Entities.Product", b =>
@@ -170,7 +173,7 @@ namespace Inventory_System.Infrastructure.Migrations
 
                     b.HasIndex("CategoryId");
 
-                    b.ToTable("Products", (string)null);
+                    b.ToTable("Products");
                 });
 
             modelBuilder.Entity("Inventory_System.Domain.Entities.ProductSupplier", b =>
@@ -207,7 +210,7 @@ namespace Inventory_System.Infrastructure.Migrations
 
                     b.HasIndex("SupplierId");
 
-                    b.ToTable("ProductSuppliers", (string)null);
+                    b.ToTable("ProductSuppliers");
                 });
 
             modelBuilder.Entity("Inventory_System.Domain.Entities.StockHistory", b =>
@@ -253,7 +256,7 @@ namespace Inventory_System.Infrastructure.Migrations
 
                     b.HasIndex("SupplierId");
 
-                    b.ToTable("StockHistories", (string)null);
+                    b.ToTable("StockHistories");
                 });
 
             modelBuilder.Entity("Inventory_System.Domain.Entities.Supplier", b =>
@@ -296,7 +299,7 @@ namespace Inventory_System.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Suppliers", (string)null);
+                    b.ToTable("Suppliers");
                 });
 
             modelBuilder.Entity("Inventory_System.Infrastructure.Identity.ApplicationUser", b =>
@@ -372,43 +375,6 @@ namespace Inventory_System.Infrastructure.Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("AspNetUsers", (string)null);
-                });
-
-            modelBuilder.Entity("Inventory_System.Infrastructure.Identity.UserRefreshToken", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("ExpiresOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool>("IsRevoked")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("JwtId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("RevokedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Token")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("UserRefreshTokens", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -600,17 +566,6 @@ namespace Inventory_System.Infrastructure.Migrations
                     b.Navigation("Supplier");
                 });
 
-            modelBuilder.Entity("Inventory_System.Infrastructure.Identity.UserRefreshToken", b =>
-                {
-                    b.HasOne("Inventory_System.Infrastructure.Identity.ApplicationUser", "User")
-                        .WithMany("RefreshTokens")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("User");
-                });
-
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -681,11 +636,6 @@ namespace Inventory_System.Infrastructure.Migrations
                     b.Navigation("ProductSuppliers");
 
                     b.Navigation("StockHistories");
-                });
-
-            modelBuilder.Entity("Inventory_System.Infrastructure.Identity.ApplicationUser", b =>
-                {
-                    b.Navigation("RefreshTokens");
                 });
 #pragma warning restore 612, 618
         }

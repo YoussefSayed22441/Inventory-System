@@ -7,7 +7,6 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,12 +22,13 @@ namespace Inventory_System.Infrastructure
         {
        
             services.AddScoped<ICategoryRepo, CategoryRepo>();
-            services.AddScoped<ISupplierRepo,SupplierRepo>();
-            services.AddScoped<IProductRepo, ProductRepo>();
-            services.AddScoped<INotificationRepo, NotificationRepo>();
             services.AddScoped(typeof(IGenericRepo<>), typeof(GenericRepo<>));
 
-            services.AddTransient<IRefreshTokenRepo, RefreshTokenRepo>();
+            services.AddScoped<ISupplierRepo,SupplierRepo>();
+            services.AddScoped<IProductRepo, ProductRepo>();
+            services.AddScoped<IProductSupplierRepo, ProductSupplierRepo>();
+            services.AddScoped<INotificationRepo, NotificationRepo>();
+
 
 
             //Connect To DB

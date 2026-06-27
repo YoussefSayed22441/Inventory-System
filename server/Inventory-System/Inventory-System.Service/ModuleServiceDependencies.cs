@@ -17,7 +17,9 @@ namespace Inventory_System.Service
             Service.AddScoped<ICategoryService, CategoryService>();
             Service.AddScoped<ISupplierService, SupplierService>();
             Service.AddScoped<IProductService, ProductService>();
+            Service.AddScoped<IProductSupplierService, ProductSupplierService>();
             Service.AddScoped<INotificationService, NotificationService>();
+            Service.AddScoped<IStockHistoryService, StockHistoryService>();
 
             Service.AddTransient<IAuthenticationService, AuthenticationService>();
 

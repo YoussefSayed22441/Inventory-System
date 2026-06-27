@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 17
-VisualStudioVersion = 17.14.36408.4 d17.14
+# Visual Studio Version 18
+VisualStudioVersion = 18.7.11919.86 stable
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Inventory-System.API", "Inventory-System.API\Inventory-System.API.csproj", "{3CAF4054-794A-419A-90B7-EE5490A8B708}"
 EndProject
@@ -12,6 +12,11 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Inventory-System.Infrastructure", "Inventory-System.Infrastructure\Inventory-System.Infrastructure.csproj", "{EE3C0FE7-DA20-41C5-BAE4-BABBC8CD60FD}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Inventory-System.Service", "Inventory-System.Service\Inventory-System.Service.csproj", "{69E40414-676D-4E7E-886B-C658E543D48D}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{3AFB7E02-E82F-4CD1-AB2B-5088C3E592E0}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
