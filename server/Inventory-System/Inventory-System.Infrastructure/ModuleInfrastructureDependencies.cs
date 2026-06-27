@@ -6,12 +6,6 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Inventory_System.Infrastructure
 {
@@ -26,7 +20,7 @@ namespace Inventory_System.Infrastructure
             services.AddScoped<IProductRepo, ProductRepo>();
             services.AddScoped<IProductSupplierRepo, ProductSupplierRepo>();
             services.AddScoped<INotificationRepo, NotificationRepo>();
-
+            services.AddScoped<IStockHistoryRepo, StockHistoryRepo>();
 
             //Connect To DB
             services.AddDbContext<InventoryDbContext>(options =>
