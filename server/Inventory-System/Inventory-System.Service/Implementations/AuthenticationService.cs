@@ -196,12 +196,12 @@ namespace Inventory_System.Service.Implementations
         }
 
 
-        public async Task<bool> RevokeUserRefreshTokens(string accessToken, string refreshToken)
+        public async Task<bool> RevokeUserRefreshTokensAsync(string accessToken, string refreshToken)
         {
             var jwtToken = ReadJWTToken(accessToken);
             if (jwtToken == null || !jwtToken.Header.Alg.Equals(SecurityAlgorithms.HmacSha256, StringComparison.InvariantCultureIgnoreCase))
             {
-                throw new SecurityTokenException("Invalid Alg AccessToken");
+                throw new SecurityTokenException("Invalid Access AccessToken");
             }
 
             var userId = jwtToken.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value;
@@ -215,35 +215,24 @@ namespace Inventory_System.Service.Implementations
             {
                 throw new SecurityTokenException("Invalid AccessToken claims");
             }
+            var storedRefreshToken = _refreshTokenRepository
+             .GetTableAsTracking()
+             .FirstOrDefault(x =>
+                 x.Token == refreshToken &&
+                 x.UserId == userId &&
+                 !x.IsRevoked);
 
-            var userTokens = _refreshTokenRepository.GetTableAsTracking()
-                .Where(x => x.UserId == userId && !x.IsRevoked)
-                .ToList();
+            if (storedRefreshToken == null)
+                throw new SecurityTokenException("Invalid Refresh Token");
 
-            if (!string.IsNullOrWhiteSpace(refreshToken))
-            {
-                var requestedToken = userTokens.FirstOrDefault(x => x.Token == refreshToken);
-                if (requestedToken == null)
-                {
-                    throw new SecurityTokenException("Invalid Refresh Token");
-                }
+            if (storedRefreshToken.JwtId != jti)
+                throw new SecurityTokenException("Token mismatch");
 
-                if (requestedToken.JwtId != jti)
-                {
-                    throw new SecurityTokenException("Token mismatch");
-                }
-            }
+            storedRefreshToken.IsRevoked = true;
+            storedRefreshToken.RevokedOn = DateTime.UtcNow;
 
-            if (!userTokens.Any())
-                return false;
+            await _refreshTokenRepository.UpdateAsync(storedRefreshToken);
 
-            foreach (var token in userTokens)
-            {
-                token.IsRevoked = true;
-                token.RevokedOn = DateTime.UtcNow;
-            }
-
-            await _refreshTokenRepository.UpdateRangeAsync(userTokens);
             return true;
         }
 
