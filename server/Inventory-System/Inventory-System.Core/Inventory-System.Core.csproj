@@ -12,6 +12,8 @@
     <Folder Include="Features\Notifications\Commands\DTOs\" />
     <Folder Include="Features\Suppliers\Commands\Validators\" />
     <Folder Include="Features\Suppliers\Queries\" />
+    <Folder Include="Features\Users\Queries\" />
+    <Folder Include="Mapper\ApplicationUser\QueryMapper\" />
   </ItemGroup>
 
   <ItemGroup>

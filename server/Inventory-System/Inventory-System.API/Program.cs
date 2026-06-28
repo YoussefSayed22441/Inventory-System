@@ -1,22 +1,21 @@
-<<<<<<< Updated upstream
 
-=======
 using Inventory_System.Core;
->>>>>>> Stashed changes
 using Inventory_System.Infrastructure;
+
 using Inventory_System.Core;
+using Inventory_System.Infrastructure;
+using Inventory_System.Infrastructure.Data;
+using Inventory_System.Infrastructure.Identity;
 using Inventory_System.Service;
-<<<<<<< Updated upstream
-=======
 using Microsoft.AspNetCore.Identity;
 using Microsoft.OpenApi.Models;
->>>>>>> Stashed changes
+using Microsoft.AspNetCore.Identity;
 
 namespace Inventory_System.API
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
 
@@ -61,9 +60,17 @@ namespace Inventory_System.API
 
             var app = builder.Build();
 
-<<<<<<< Updated upstream
+            using (var scope = app.Services.CreateScope())
+            {
+                var services = scope.ServiceProvider;
+                //// Ask CLR to Create Object From User-Role Manager Explicitly
+                var userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
+                var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
+                await RoleSeed.SeedRoleAsync(roleManager);
+                await AppIdentityDbContextSeed.SeedUserAsync(userManager);
+            }
+
             // Configure the HTTP request pipeline.
-=======
             // ✅ Seed Roles & Users
             using (var scope = app.Services.CreateScope())
             {
@@ -74,7 +81,6 @@ namespace Inventory_System.API
                 await AppIdentityDbContextSeed.SeedUserAsync(userManager);
             }
 
->>>>>>> Stashed changes
             if (app.Environment.IsDevelopment())
             {
                 app.UseSwagger();
@@ -82,11 +88,9 @@ namespace Inventory_System.API
             }
 
             app.UseHttpsRedirection();
-<<<<<<< Updated upstream
 
-=======
             app.UseAuthentication();
->>>>>>> Stashed changes
+            app.UseAuthentication();
             app.UseAuthorization();
             app.MapControllers();
             app.Run();

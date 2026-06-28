@@ -2,10 +2,12 @@ using Microsoft.AspNetCore.Mvc;
 using MediatR;
 using Inventory_System.Core.Features.Categories.Queries.Models;
 using Inventory_System.Core.Features.Categories.Commands.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Inventory_System.API.Controllers
 {
     [Route("api/[controller]")]
+    [Authorize]
     public class CategoryController : BaseApiController
     {
         private readonly IMediator _mediator;
