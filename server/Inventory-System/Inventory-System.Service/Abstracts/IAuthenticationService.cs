@@ -10,7 +10,7 @@ namespace Inventory_System.Service.Abstracts
     {
         public Task<JWTAuthResult> GetJWTTokenANDRefreshToken(ApplicationUser user);
         public Task<JWTAuthResult> GetAccessTokenAfterExpirationByRefreshToken(string accessToken, string refreshToken);
-        public Task<bool> RevokeUserRefreshTokens(string accessToken, string refreshToken);
+        public Task<bool> RevokeUserRefreshTokensAsync(string accessToken, string refreshToken);
 
     }
 }
