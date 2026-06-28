@@ -23,6 +23,7 @@ namespace Inventory_System.Infrastructure.Data
         public DbSet<StockHistory> StockHistories { get; set; }
 
 
+
         // Configure the model and apply configurations
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
