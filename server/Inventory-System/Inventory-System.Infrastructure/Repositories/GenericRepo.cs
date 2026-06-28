@@ -32,7 +32,15 @@ namespace Inventory_System.Infrastructure.Repositories
         public async Task AddAsync(T entity)
         {
             await _dbContext.Set<T>().AddAsync(entity);
-            await _dbContext.SaveChangesAsync();
+            try
+            {
+                await _dbContext.SaveChangesAsync();
+            }
+            catch (DbUpdateException ex)
+            {
+                Console.WriteLine(ex.InnerException?.Message);
+                throw;
+            }
         }
 
         public virtual async Task AddRangeAsync(ICollection<T> entities)

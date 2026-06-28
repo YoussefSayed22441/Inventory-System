@@ -1,4 +1,4 @@
-﻿using Inventory_System.Infrastructure.Data;
+using Inventory_System.Infrastructure.Data;
 using Inventory_System.Infrastructure.Identity;
 using Inventory_System.Infrastructure.Interfaces;
 using Inventory_System.Infrastructure.Repositories;
@@ -7,12 +7,14 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+
 
 namespace Inventory_System.Infrastructure
 {
@@ -28,6 +30,10 @@ namespace Inventory_System.Infrastructure
             services.AddScoped<IProductRepo, ProductRepo>();
             services.AddScoped<IProductSupplierRepo, ProductSupplierRepo>();
             services.AddScoped<INotificationRepo, NotificationRepo>();
+            services.AddScoped<IStockHistoryRepo, StockHistoryRepo>();
+            services.AddScoped<IRefreshTokenRepo, RefreshTokenRepo>();
+
+
 
 
 

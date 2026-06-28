@@ -25,6 +25,7 @@ namespace Inventory_System.Infrastructure.Data
         public DbSet<UserRefreshToken> UserRefreshTokens { get; set; }
 
 
+
         // Configure the model and apply configurations
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
