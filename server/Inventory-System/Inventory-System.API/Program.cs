@@ -68,6 +68,8 @@ namespace Inventory_System.API
                 var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
                 await RoleSeed.SeedRoleAsync(roleManager);
                 await AppIdentityDbContextSeed.SeedUserAsync(userManager);
+                var dbcontaxt = services.GetRequiredService<InventoryDbContext>();
+                await DataSeeder.seedasync(dbcontaxt);
             }
 
             // Configure the HTTP request pipeline.
