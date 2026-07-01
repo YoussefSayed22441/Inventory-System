@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import './App.css';
-import { Routes, Route, useLocation } from "react-router-dom";
+import { Routes, Route, useLocation, useNavigate } from "react-router-dom";
+
+import BoxIntroAnimation from './components/ui/BoxIntroAnimation';
 
 import Navbar from './layouts/Navbar';
 import Sidebar from './layouts/Sidebar';
@@ -23,13 +25,30 @@ import Finance from "./pages/Finance";
 import Pos from "./pages/Pos";
 
 function App() {
-  const location = useLocation();
+  const location   = useLocation();
+  const navigate   = useNavigate();
   const showLayout = location.pathname !== '/login';
   const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
 
+  // Show the box intro only on the very first visit
+  const [showIntro, setShowIntro] = useState(
+    () => !localStorage.getItem('ims_intro_done')
+  );
+
+  const handleIntroComplete = () => {
+    localStorage.setItem('ims_intro_done', '1');
+    setShowIntro(false);
+    navigate('/login');
+  };
+
   return (
     <div className="app-container">
-      <BackgroundCanvas />
+      {/* <BackgroundCanvas /> */}
+
+      {/* First-visit box animation — renders above everything */}
+      {showIntro && (
+        <BoxIntroAnimation onComplete={handleIntroComplete} />
+      )}
       {showLayout && (
         <Sidebar 
           isOpen={isMobileSidebarOpen} 

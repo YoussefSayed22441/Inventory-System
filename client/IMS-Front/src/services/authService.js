@@ -7,6 +7,11 @@ const authService = {
     const response = await axios.post(`${API_URL}/auth/login`, credentials);
     return response.data;
   },
+
+  register: async (userData) => {
+    const response = await axios.post(`${API_URL}/auth/register`, userData);
+    return response.data;
+  },
   
   logout: async () => {
     // Perform any API logout if needed
