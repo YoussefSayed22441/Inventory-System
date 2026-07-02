@@ -1,19 +1,14 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Inventory_System.Core.Bases;
-using Inventory_System.Core.Features.Categories.Queries.DTOs;
-using Inventory_System.Core.Features.Categories.Queries.Models;
+using Inventory_System.Core.Features.Suppliers.Queries.DTOs;
+using Inventory_System.Core.Features.Suppliers.Queries.Models;
 using Inventory_System.Core.Wrapper;
 using Inventory_System.Service.Abstracts;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
-
-namespace Inventory_System.Core.Features.Categories.Queries.Handles
+namespace Inventory_System.Core.Features.Suppliers.Queries.Handlers
 {
     internal class GetAllSuppliersQueryHandler : IRequestHandler<GetAllSuppliersQuery, Result<PaginatedResult<SupplierDto>>>
     {

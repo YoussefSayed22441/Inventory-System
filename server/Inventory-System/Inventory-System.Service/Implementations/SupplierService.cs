@@ -27,6 +27,7 @@ namespace Inventory_System.Service.Implementations
 
             return supplier;
         }
+
         public async Task<bool> ExistsAsync(Guid id)
         {
             return await _supplierRepo.IsExist(x => x.Id == id);

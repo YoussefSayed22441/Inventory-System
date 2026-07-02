@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Authorization;
 namespace Inventory_System.API.Controllers
 {
     [Route("api/[controller]")]
-    [Authorize]
+    //[Authorize]
     public class CategoryController : BaseApiController
     {
         private readonly IMediator _mediator;

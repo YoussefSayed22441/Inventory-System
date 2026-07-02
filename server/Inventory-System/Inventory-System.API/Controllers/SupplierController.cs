@@ -1,7 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Inventory_System.Core.Features.Suppliers.Commands.Models;
+using Inventory_System.Core.Features.Suppliers.Queries.Models;
 using MediatR;
-using Inventory_System.Core.Features.Categories.Queries.Models;
-using Inventory_System.Core.Features.Categories.Commands.Models;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Inventory_System.API.Controllers
 {
@@ -9,6 +9,7 @@ namespace Inventory_System.API.Controllers
     public class SupplierController : BaseApiController
     {
         private readonly IMediator _mediator;
+
         public SupplierController(IMediator mediator)
         {
             _mediator = mediator;
