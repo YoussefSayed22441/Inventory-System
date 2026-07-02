@@ -1,4 +1,4 @@
-﻿using Inventory_System.Core.Features.Categories.Queries.DTOs;
+﻿using Inventory_System.Core.Features.Suppliers.Queries.DTOs;
 using Inventory_System.Domain.Entities;
 
 namespace Inventory_System.Core.Mapper.SupplierMapper
@@ -7,6 +7,7 @@ namespace Inventory_System.Core.Mapper.SupplierMapper
     {
         public void GetSupplierByIdMapper()
         {
+            //        Source  ....... Dest
             CreateMap<Supplier, SupplierDto>();
         }
     }

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Inventory_System.Core.Features.Categories.Queries.DTOs
+﻿namespace Inventory_System.Core.Features.Suppliers.Queries.DTOs
 {
     public class SupplierDto
     {

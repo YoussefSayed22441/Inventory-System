@@ -1,5 +1,6 @@
 ﻿using FluentValidation;
-using Inventory_System.Core.Features.Categories.Queries.Models;
+using Inventory_System.Core.Features.Suppliers.Queries.Models;
+
 namespace Inventory_System.Core.Features.Suppliers.Queries.Validators
 {
     public class GetSupplierByIdValidator : AbstractValidator<GetSupplierByIdQuery>

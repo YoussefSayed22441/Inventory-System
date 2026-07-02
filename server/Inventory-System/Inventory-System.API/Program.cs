@@ -1,7 +1,3 @@
-
-using Inventory_System.Core;
-using Inventory_System.Infrastructure;
-
 using Inventory_System.Core;
 using Inventory_System.Infrastructure;
 using Inventory_System.Infrastructure.Data;
@@ -9,7 +5,6 @@ using Inventory_System.Infrastructure.Identity;
 using Inventory_System.Service;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.OpenApi.Models;
-using Microsoft.AspNetCore.Identity;
 
 namespace Inventory_System.API
 {
