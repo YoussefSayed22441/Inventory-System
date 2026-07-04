@@ -2,9 +2,6 @@
 using Inventory_System.Infrastructure.Interfaces;
 using Inventory_System.Service.Abstracts;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Inventory_System.Service.Implementations
 {
@@ -39,36 +36,40 @@ namespace Inventory_System.Service.Implementations
 
         public async Task<Product?> GetByIdAsync(Guid id)
         {
-            return await _productRepo.GetTableNoTracking()
+            return await _productRepo
+                .GetTableNoTracking()
                 .FirstOrDefaultAsync(x => x.Id == id);
         }
 
         public async Task<Product?> GetByIdWithIncludeAsync(Guid id)
         {
-            return await _productRepo.GetTableNoTracking()
+            return await _productRepo
+                .GetTableNoTracking()
                 .Include(x => x.Category)
-                .Include(x =>x.ProductSuppliers)
+                .Include(x => x.ProductSuppliers)
                     .ThenInclude(ps => ps.Supplier)
                 .FirstOrDefaultAsync(x => x.Id == id);
         }
 
         public async Task<Product?> GetBySkuAsync(string sku)
         {
-            return await _productRepo.GetTableNoTracking()
+            return await _productRepo
+                .GetTableNoTracking()
                 .Include(x => x.Category)
                 .FirstOrDefaultAsync(x => x.SKU == sku);
         }
 
         public async Task<Product?> GetByBarcodeAsync(string barcode)
         {
-            return await _productRepo.GetTableNoTracking()
+            return await _productRepo
+                .GetTableNoTracking()
                 .Include(x => x.Category)
                 .FirstOrDefaultAsync(x => x.Barcode == barcode);
         }
 
         public async Task<bool> ExistsAsync(Guid id)
         {
-            return await _productRepo.IsExist(x=>x.Id == id);
+            return await _productRepo.IsExist(x => x.Id == id);
         }
 
         public async Task<Product?> AddAsync(Product product)
@@ -76,7 +77,8 @@ namespace Inventory_System.Service.Implementations
             // SKU must be unique if provided
             if (!string.IsNullOrWhiteSpace(product.SKU))
             {
-                var skuExists = await _productRepo.GetTableNoTracking()
+                var skuExists = await _productRepo
+                    .GetTableNoTracking()
                     .AnyAsync(x => x.SKU == product.SKU);
 
                 if (skuExists) return null;
@@ -84,8 +86,9 @@ namespace Inventory_System.Service.Implementations
 
             await _productRepo.AddAsync(product);
 
-            return await _productRepo.GetTableNoTracking()
-                .Include(x =>x.Category)
+            return await _productRepo
+                .GetTableNoTracking()
+                .Include(x => x.Category)
                 .FirstOrDefaultAsync(x => x.Id == product.Id);
         }
 
@@ -104,29 +107,11 @@ namespace Inventory_System.Service.Implementations
                 await transaction.CommitAsync();
                 return true;
             }
-            catch 
+            catch
             {
                 await transaction.RollbackAsync();
                 return false;
             }
         }
-
-        
-
-        
-
-        
-
-        
-
-       
-
-        
-
-        
-
-        
-
-        
     }
 }

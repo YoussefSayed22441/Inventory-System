@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Inventory_System.Core.Features.Categories.Commands.Models
+namespace Inventory_System.Core.Features.Products.Commands.Models
 {
     public class DeleteProductCommand : IRequest<Result<bool>>
     {

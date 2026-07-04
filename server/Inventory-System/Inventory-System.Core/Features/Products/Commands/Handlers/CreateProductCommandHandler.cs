@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using Inventory_System.Core.Bases;
-using Inventory_System.Core.Features.Categories.Commands.Models;
-using Inventory_System.Core.Features.Categories.Queries.DTOs;
+using Inventory_System.Core.Features.Products.Commands.Models;
+using Inventory_System.Core.Features.Products.Queries.DTOs;
 using Inventory_System.Domain.Entities;
 using Inventory_System.Service.Abstracts;
 using MediatR;
@@ -9,14 +9,14 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Inventory_System.Core.Features.Categories.Commands.Handlers
+namespace Inventory_System.Core.Features.Products.Commands.Handlers
 {
     public class CreateProductCommandHandler : IRequestHandler<CreateProductCommand, Result<ProductDto>>
     {
         private readonly IProductService _productService;
         private readonly ICategoryService _categoryService;
         private readonly IMapper _mapper;
-public CreateProductCommandHandler(IProductService productService, ICategoryService categoryService, IMapper mapper)
+        public CreateProductCommandHandler(IProductService productService, ICategoryService categoryService, IMapper mapper)
         {
             _productService = productService;
             _categoryService = categoryService;

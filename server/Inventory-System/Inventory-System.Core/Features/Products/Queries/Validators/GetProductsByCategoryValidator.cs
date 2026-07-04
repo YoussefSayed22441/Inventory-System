@@ -1,10 +1,10 @@
 ﻿using FluentValidation;
-using Inventory_System.Core.Features.Categories.Queries.Models;
+using Inventory_System.Core.Features.Products.Queries.Models;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Inventory_System.Core.Features.Categories.Queries.Validators
+namespace Inventory_System.Core.Features.Products.Queries.Validators
 {
     public class GetProductsByCategoryValidator : AbstractValidator<GetProductsByCategoryQuery>
     {

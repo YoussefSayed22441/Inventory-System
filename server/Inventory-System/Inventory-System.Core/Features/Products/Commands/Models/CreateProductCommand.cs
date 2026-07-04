@@ -1,11 +1,11 @@
 ﻿using Inventory_System.Core.Bases;
-using Inventory_System.Core.Features.Categories.Queries.DTOs;
+using Inventory_System.Core.Features.Products.Queries.DTOs;
 using MediatR;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Inventory_System.Core.Features.Categories.Commands.Models
+namespace Inventory_System.Core.Features.Products.Commands.Models
 {
     public class CreateProductCommand : IRequest<Result<ProductDto>>
     {

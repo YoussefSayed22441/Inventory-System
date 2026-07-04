@@ -1,12 +1,12 @@
 ﻿using Inventory_System.Core.Bases;
-using Inventory_System.Core.Features.Categories.Commands.Models;
+using Inventory_System.Core.Features.Products.Commands.Models;
 using Inventory_System.Service.Abstracts;
 using MediatR;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Inventory_System.Core.Features.Categories.Commands.Handlers
+namespace Inventory_System.Core.Features.Products.Commands.Handlers
 {
     public class DeleteProductCommandHandler : IRequestHandler<DeleteProductCommand, Result<bool>>
     {
