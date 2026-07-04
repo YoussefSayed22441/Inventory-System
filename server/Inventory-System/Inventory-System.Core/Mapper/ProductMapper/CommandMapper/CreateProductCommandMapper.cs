@@ -1,4 +1,4 @@
-﻿using Inventory_System.Core.Features.Categories.Commands.Models;
+﻿using Inventory_System.Core.Features.Products.Commands.Models;
 using Inventory_System.Domain.Entities;
 using System;
 using System.Collections.Generic;

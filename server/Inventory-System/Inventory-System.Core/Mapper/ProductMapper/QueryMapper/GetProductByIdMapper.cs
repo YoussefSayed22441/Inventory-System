@@ -1,4 +1,4 @@
-﻿using Inventory_System.Core.Features.Categories.Queries.DTOs;
+﻿using Inventory_System.Core.Features.Products.Queries.DTOs;
 using Inventory_System.Domain.Entities;
 using System;
 using System.Collections.Generic;

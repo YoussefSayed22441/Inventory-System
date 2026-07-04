@@ -1,14 +1,14 @@
 ﻿using AutoMapper;
 using Inventory_System.Core.Bases;
-using Inventory_System.Core.Features.Categories.Queries.DTOs;
-using Inventory_System.Core.Features.Categories.Queries.Models;
+using Inventory_System.Core.Features.Products.Queries.DTOs;
+using Inventory_System.Core.Features.Products.Queries.Models;
 using Inventory_System.Service.Abstracts;
 using MediatR;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Inventory_System.Core.Features.Categories.Queries.Handles
+namespace Inventory_System.Core.Features.Products.Queries.Handlers
 {
     internal class GetProductByIdQueryHandler : IRequestHandler<GetProductByIdQuery, Result<ProductDto>>
     {

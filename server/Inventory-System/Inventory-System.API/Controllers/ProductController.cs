@@ -1,5 +1,5 @@
-﻿using Inventory_System.Core.Features.Categories.Commands.Models;
-using Inventory_System.Core.Features.Categories.Queries.Models;
+﻿using Inventory_System.Core.Features.Products.Commands.Models;
+using Inventory_System.Core.Features.Products.Queries.Models;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;

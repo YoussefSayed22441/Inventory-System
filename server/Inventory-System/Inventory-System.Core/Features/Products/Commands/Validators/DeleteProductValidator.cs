@@ -1,10 +1,10 @@
 ﻿using FluentValidation;
-using Inventory_System.Core.Features.Categories.Commands.Models;
+using Inventory_System.Core.Features.Products.Commands.Models;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Inventory_System.Core.Features.Categories.Commands.Validators
+namespace Inventory_System.Core.Features.Products.Commands.Validators
 {
     public class DeleteProductValidator : AbstractValidator<DeleteProductCommand>
     {
