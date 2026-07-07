@@ -25,8 +25,8 @@ import Finance from "./pages/Finance";
 import Pos from "./pages/Pos";
 
 function App() {
-  const location   = useLocation();
-  const navigate   = useNavigate();
+  const location = useLocation();
+  const navigate = useNavigate();
   const showLayout = location.pathname !== '/login';
   const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
 
@@ -43,30 +43,30 @@ function App() {
 
   return (
     <div className="app-container">
-      {/* <BackgroundCanvas /> */}
+      <BackgroundCanvas />
 
       {/* First-visit box animation — renders above everything */}
       {showIntro && (
         <BoxIntroAnimation onComplete={handleIntroComplete} />
       )}
       {showLayout && (
-        <Sidebar 
-          isOpen={isMobileSidebarOpen} 
-          onClose={() => setIsMobileSidebarOpen(false)} 
+        <Sidebar
+          isOpen={isMobileSidebarOpen}
+          onClose={() => setIsMobileSidebarOpen(false)}
         />
       )}
-      
+
       {showLayout && isMobileSidebarOpen && (
-        <div 
-          className="sidebar-mobile-overlay" 
+        <div
+          className="sidebar-mobile-overlay"
           onClick={() => setIsMobileSidebarOpen(false)}
         />
       )}
-      
+
       <div className={showLayout ? "main-content" : "auth-content"}>
         {showLayout && (
-          <Navbar 
-            onMenuClick={() => setIsMobileSidebarOpen(true)} 
+          <Navbar
+            onMenuClick={() => setIsMobileSidebarOpen(true)}
           />
         )}
         <main className="page-body">

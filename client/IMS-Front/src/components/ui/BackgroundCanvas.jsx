@@ -48,102 +48,64 @@ const BackgroundCanvas = () => {
 
     const fuzzyTexture = createFuzzySprite();
 
-    const furBalls = [];
-    const colors = [
-      new THREE.Color(0xff6b00), // Neon Orange
-      new THREE.Color(0x2f80ff), // Electric Blue
-      new THREE.Color(0x00d2ff), // Cyan
-      new THREE.Color(0x7928ca), // Purple
-      new THREE.Color(0xff007a), // Magenta
-    ];
+    // Single color for every ball — soft electric blue
+    const BALL_COLOR = new THREE.Color(0x4da6ff);
 
-    const xLimit = 9;
-    const yLimit = 5;
-    const numBalls = 10;
+    const furBalls = [];
+
+    // Compute the visible width/height of the scene at a given Z depth,
+    // so balls spread across the FULL page regardless of window size/aspect ratio.
+    const getVisibleBoundsAtZ = (z) => {
+      const distance = Math.abs(camera.position.z - z);
+      const vFovRad = (camera.fov * Math.PI) / 180;
+      const visibleHeight = 2 * Math.tan(vFovRad / 2) * distance;
+      const visibleWidth = visibleHeight * camera.aspect;
+      return { halfWidth: visibleWidth / 2, halfHeight: visibleHeight / 2 };
+    };
+
+    const numBalls = 220; // dense swarm covering the full page
 
     for (let i = 0; i < numBalls; i++) {
-      const radius = 1.0 + Math.random() * 1.8;
-      const baseColor = colors[i % colors.length];
+      // Each ball is its own independent sprite — no grouping into clusters
+      // Skew toward smaller balls with occasional larger ones for natural variety
+      const baseSize = 0.12 + Math.pow(Math.random(), 1.6) * 1.0;
 
-      const particleCount = 200;
-      const geometry = new THREE.BufferGeometry();
-
-      // Current positions (mutated each frame during split)
-      const positions = new Float32Array(particleCount * 3);
-      // Rest positions — the "home" shape of the ball, never mutated
-      const restPositions = new Float32Array(particleCount * 3);
-      // Per-particle velocities for the split explosion
-      const particleVelocities = new Float32Array(particleCount * 3);
-      // Per-particle explosion direction (unit vector from ball center)
-      const explodeDirs = new Float32Array(particleCount * 3);
-
-      const ptColors = new Float32Array(particleCount * 3);
-
-      for (let j = 0; j < particleCount; j++) {
-        const theta = Math.random() * Math.PI * 2;
-        const phi = Math.acos(Math.random() * 2 - 1);
-        const dist = radius * (0.7 + Math.random() * 0.7);
-
-        const px = dist * Math.sin(phi) * Math.cos(theta);
-        const py = dist * Math.sin(phi) * Math.sin(theta);
-        const pz = dist * Math.cos(phi);
-
-        positions[j * 3] = px;
-        positions[j * 3 + 1] = py;
-        positions[j * 3 + 2] = pz;
-
-        restPositions[j * 3] = px;
-        restPositions[j * 3 + 1] = py;
-        restPositions[j * 3 + 2] = pz;
-
-        // Normalize the rest position as the explosion direction
-        const len = Math.sqrt(px * px + py * py + pz * pz) || 1;
-        explodeDirs[j * 3] = px / len;
-        explodeDirs[j * 3 + 1] = py / len;
-        explodeDirs[j * 3 + 2] = pz / len;
-
-        const brightness = 0.8 + Math.random() * 0.4;
-        ptColors[j * 3] = baseColor.r * brightness;
-        ptColors[j * 3 + 1] = baseColor.g * brightness;
-        ptColors[j * 3 + 2] = baseColor.b * brightness;
-      }
-
-      geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-      geometry.setAttribute('color', new THREE.BufferAttribute(ptColors, 3));
-
-      const material = new THREE.PointsMaterial({
-        size: radius * 0.35,
+      const brightness = 0.75 + Math.random() * 0.45;
+      const spriteMaterial = new THREE.SpriteMaterial({
         map: fuzzyTexture,
-        vertexColors: true,
+        color: new THREE.Color(
+          BALL_COLOR.r * brightness,
+          BALL_COLOR.g * brightness,
+          BALL_COLOR.b * brightness
+        ),
         transparent: true,
-        opacity: 0.45,
+        opacity: 0.4 + Math.random() * 0.2,
         blending: THREE.AdditiveBlending,
         depthWrite: false,
       });
 
-      const points = new THREE.Points(geometry, material);
+      const sprite = new THREE.Sprite(spriteMaterial);
+      sprite.scale.setScalar(baseSize);
 
-      const homeX = (Math.random() * 2 - 1) * xLimit;
-      const homeY = (Math.random() * 2 - 1) * yLimit;
-      const homeZ = -3 + Math.random() * 3;
+      const homeZ = -4 + Math.random() * 5;
+      const { halfWidth, halfHeight } = getVisibleBoundsAtZ(homeZ);
 
-      points.position.set(homeX, homeY, homeZ);
-      scene.add(points);
+      const homeX = (Math.random() * 2 - 1) * halfWidth;
+      const homeY = (Math.random() * 2 - 1) * halfHeight;
+
+      sprite.position.set(homeX, homeY, homeZ);
+      scene.add(sprite);
 
       furBalls.push({
-        points,
-        geometry,
+        points: sprite,
         homePosition: new THREE.Vector3(homeX, homeY, homeZ),
         velocity: new THREE.Vector3(0, 0, 0),
+        // Slow, lazy "swimming" drift — like moving gently through water
         driftOffset: Math.random() * 100,
-        driftSpeed: 0.008 + Math.random() * 0.015,
-        spinSpeed: (Math.random() > 0.5 ? 1 : -1) * (0.002 + Math.random() * 0.004),
-        radius,
-        // Split state
-        restPositions,
-        particleVelocities,
-        explodeDirs,
-        splitAmount: 0,
+        driftOffset2: Math.random() * 100,
+        driftSpeed: 0.0012 + Math.random() * 0.0022,
+        radius: baseSize,
+        baseSize,
         isHovered: false,
       });
     }
@@ -186,89 +148,42 @@ const BackgroundCanvas = () => {
       }
 
       furBalls.forEach((ball) => {
-        // A. Drifting
-        const timeOffset = elapsed * ball.driftSpeed * 100 + ball.driftOffset;
-        const driftForceX = Math.sin(timeOffset) * 0.008;
-        const driftForceY = Math.cos(timeOffset * 0.8) * 0.008;
+        // A. Slow, layered "swimming" drift — two gentle sine waves combined
+        // feels more organic than one, like drifting currents in water
+        const t1 = elapsed * ball.driftSpeed * 100 + ball.driftOffset;
+        const t2 = elapsed * ball.driftSpeed * 55 + ball.driftOffset2;
+        const driftForceX = Math.sin(t1) * 0.0016 + Math.sin(t2 * 0.6) * 0.001;
+        const driftForceY = Math.cos(t1 * 0.8) * 0.0016 + Math.cos(t2 * 0.5) * 0.001;
         ball.velocity.x += driftForceX;
         ball.velocity.y += driftForceY;
 
-        // B. Whole-ball mouse repulsion + hover detection
-        const hoverSplitRadius = ball.radius * 1.6;
-        ball.isHovered = false;
+        // B. Gentle pull back toward home so balls stay roughly in place
+        const returnForce = new THREE.Vector3().subVectors(ball.homePosition, ball.points.position);
+        returnForce.z = 0;
+        ball.velocity.addScaledVector(returnForce, 0.003);
 
+        // C. Mouse hover — slowly push the ball away, like water parting around your hand
+        ball.isHovered = false;
         if (mouse.x !== -9999) {
           const ballFlatPos = new THREE.Vector3(ball.points.position.x, ball.points.position.y, 0);
           const distance = ballFlatPos.distanceTo(mouse3D);
-          const repulsionRadius = 4.2;
+          const repelRadius = 3.2;
 
-          if (distance < repulsionRadius) {
+          if (distance < repelRadius) {
+            ball.isHovered = true;
             const forceDir = new THREE.Vector3().subVectors(ballFlatPos, mouse3D);
             forceDir.z = 0;
             forceDir.normalize();
-            const strengthFactor = (repulsionRadius - distance) / repulsionRadius;
-            ball.velocity.addScaledVector(forceDir, strengthFactor * 0.18);
-          }
-
-          if (distance < hoverSplitRadius) {
-            ball.isHovered = true;
+            const strengthFactor = (repelRadius - distance) / repelRadius;
+            // Small multiplier keeps the push slow and smooth, not a snap
+            ball.velocity.addScaledVector(forceDir, strengthFactor * 0.02);
           }
         }
 
-        // C. Return force
-        const returnForce = new THREE.Vector3().subVectors(ball.homePosition, ball.points.position);
-        returnForce.z = 0;
-        ball.velocity.addScaledVector(returnForce, 0.008);
-
-        // D. Friction
-        ball.velocity.multiplyScalar(0.97);
+        // D. Heavy friction/drag — like moving through water, not air
+        ball.velocity.multiplyScalar(0.95);
         ball.points.position.add(ball.velocity);
         ball.points.position.z = ball.homePosition.z;
-
-        // E. Spin
-        ball.points.rotation.y += ball.spinSpeed;
-        ball.points.rotation.x += ball.spinSpeed * 0.4;
-
-        // F. Per-particle split explosion
-        const splitTarget = ball.isHovered ? 1 : 0;
-        ball.splitAmount += (splitTarget - ball.splitAmount) * 0.08;
-
-        const posAttr = ball.geometry.attributes.position;
-        const posArr = posAttr.array;
-        const particleCount = posArr.length / 3;
-
-        for (let j = 0; j < particleCount; j++) {
-          const rx = ball.restPositions[j * 3];
-          const ry = ball.restPositions[j * 3 + 1];
-          const rz = ball.restPositions[j * 3 + 2];
-
-          const cx = posArr[j * 3] - rx;
-          const cy = posArr[j * 3 + 1] - ry;
-          const cz = posArr[j * 3 + 2] - rz;
-
-          const ex = ball.explodeDirs[j * 3];
-          const ey = ball.explodeDirs[j * 3 + 1];
-          const ez = ball.explodeDirs[j * 3 + 2];
-
-          const explodeScale = ball.splitAmount * ball.radius * 2.2;
-          const tx = ex * explodeScale;
-          const ty = ey * explodeScale;
-          const tz = ez * explodeScale;
-
-          // Spring each particle toward its target offset
-          ball.particleVelocities[j * 3] = (ball.particleVelocities[j * 3] + (tx - cx) * 0.1) * 0.75;
-          ball.particleVelocities[j * 3 + 1] = (ball.particleVelocities[j * 3 + 1] + (ty - cy) * 0.1) * 0.75;
-          ball.particleVelocities[j * 3 + 2] = (ball.particleVelocities[j * 3 + 2] + (tz - cz) * 0.1) * 0.75;
-
-          posArr[j * 3] = rx + cx + ball.particleVelocities[j * 3];
-          posArr[j * 3 + 1] = ry + cy + ball.particleVelocities[j * 3 + 1];
-          posArr[j * 3 + 2] = rz + cz + ball.particleVelocities[j * 3 + 2];
-        }
-
-        posAttr.needsUpdate = true;
-
-        // Fade opacity based on splitAmount
-        ball.points.material.opacity = 0.45 + ball.splitAmount * 0.35;
       });
 
       renderer.render(scene, camera);
