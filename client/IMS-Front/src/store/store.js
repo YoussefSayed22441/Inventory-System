@@ -3,6 +3,8 @@ import authReducer from "./authSlice";
 import inventoryReducer from "./inventorySlice";
 import categoryReducer from "./categorySlice";
 import supplierReducer from "./supplierSlice";
+import userReducer from "./userSlice";
+import transferReducer from "./transferSlice";
 
 export const store = configureStore({
   reducer: {
@@ -10,5 +12,7 @@ export const store = configureStore({
     inventory: inventoryReducer,
     categories: categoryReducer,
     suppliers: supplierReducer,
+    users: userReducer,
+    transfers: transferReducer,
   },
 });

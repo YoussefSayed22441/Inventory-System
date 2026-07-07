@@ -1,21 +1,22 @@
 import { Link, useLocation } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { logout } from '../store/authSlice';
-import { 
-  Boxes, 
-  LayoutDashboard, 
-  Package, 
-  FolderTree, 
-  Truck, 
-  ClipboardList, 
-  ShoppingCart, 
-  Warehouse, 
-  ArrowLeftRight, 
-  BarChart3, 
-  Users, 
-  Settings, 
+import {
+  Boxes,
+  LayoutDashboard,
+  Package,
+  FolderTree,
+  Truck,
+  ClipboardList,
+  ShoppingCart,
+  Warehouse,
+  ArrowLeftRight,
+  BarChart3,
+  Users,
+  Settings,
   LogOut,
-  X
+  X,
+  User,
 } from 'lucide-react';
 import "../styles/layouts/Sidebar.css";
 
@@ -68,10 +69,10 @@ const Sidebar = ({ isOpen, onClose }) => {
               onClick={onClose}
             >
               <div className="sidebar-icon-container">
-                <Icon 
-                  size={20} 
-                  strokeWidth={isActive ? 2.5 : 2} 
-                  className="sidebar-icon" 
+                <Icon
+                  size={20}
+                  strokeWidth={isActive ? 2.5 : 2}
+                  className="sidebar-icon"
                 />
               </div>
               <span className="sidebar-text">
@@ -84,18 +85,20 @@ const Sidebar = ({ isOpen, onClose }) => {
 
       {/* Footer Profile & Logout Info */}
       <div className="sidebar-footer">
-        <div className="sidebar-profile">
-          <div className="profile-avatar-wrapper">
-            <div className="profile-avatar">
-              {user?.username?.[0]?.toUpperCase() || user?.name?.[0]?.toUpperCase() || 'A'}
+        <Link to="/profile" onClick={onClose} style={{ textDecoration: 'none' }}>
+          <div className="sidebar-profile">
+            <div className="profile-avatar-wrapper">
+              <div className="profile-avatar">
+                {user?.username?.[0]?.toUpperCase() || user?.name?.[0]?.toUpperCase() || 'A'}
+              </div>
+              <div className="status-indicator"></div>
             </div>
-            <div className="status-indicator"></div>
+            <div className="profile-details">
+              <span className="profile-name">{user?.username || user?.name || 'Admin'}</span>
+              <span className="profile-role">{user?.role || 'Administrator'}</span>
+            </div>
           </div>
-          <div className="profile-details">
-            <span className="profile-name">{user?.username || user?.name || 'Admin'}</span>
-            <span className="profile-role">{user?.role || 'Administrator'}</span>
-          </div>
-        </div>
+        </Link>
 
         <button onClick={handleLogout} className="logout-button" title="Logout">
           <LogOut size={20} className="logout-icon" />
