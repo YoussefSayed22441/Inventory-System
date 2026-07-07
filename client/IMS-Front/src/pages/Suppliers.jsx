@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { setSearchQuery } from '../store/supplierSlice';
+import { setSearchQuery, fetchSuppliers } from '../store/supplierSlice';
 import SupplierHeader from '../components/suppliers/SupplierHeader';
 import SupplierStats from '../components/suppliers/SupplierStats';
 import SupplierCardsGrid from '../components/suppliers/SupplierCardsGrid';
@@ -11,8 +11,13 @@ import '../styles/pages/Suppliers.css';
 const Suppliers = () => {
   const dispatch = useDispatch();
   const searchQuery = useSelector((state) => state.suppliers.searchQuery);
-  const products = useSelector((state) => state.inventory.items);
-  const suppliers = useSelector((state) => state.suppliers.items);
+  const products    = useSelector((state) => state.inventory.items);
+  const suppliers   = useSelector((state) => state.suppliers.items);
+
+  // Fetch from API on mount
+  useEffect(() => {
+    dispatch(fetchSuppliers());
+  }, [dispatch]);
 
   // Form Modal (Add & Edit) states
   const [isFormOpen, setIsFormOpen] = useState(false);

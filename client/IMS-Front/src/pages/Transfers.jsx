@@ -1,9 +1,9 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import {
   ArrowLeftRight, Search, Plus, ArrowRight, Eye, Trash2,
   Filter, CheckCircle, Clock, AlertTriangle, XCircle,
-  Package, User, Calendar, Warehouse, FileText,
+  Package, User, Calendar, Warehouse, FileText, Database,
 } from 'lucide-react';
 import {
   addTransfer,
@@ -13,6 +13,7 @@ import {
   setStatusFilter,
   setWarehouseFilter,
 } from '../store/transferSlice';
+import { fetchStockHistory, createStockEntry, TransactionType } from '../store/stockHistorySlice';
 import GlassModal from '../components/ui/GlassModal';
 import '../styles/pages/Transfers.css';
 
@@ -45,9 +46,15 @@ const Transfers = () => {
   const dispatch = useDispatch();
   const { items, searchQuery, statusFilter, warehouseFilter } = useSelector((s) => s.transfers);
   const inventoryItems = useSelector((s) => s.inventory.items);
+  const { items: stockHistory, loading: historyLoading } = useSelector((s) => s.stockHistory);
+
+  /* Fetch real stock history from API on mount */
+  useEffect(() => {
+    dispatch(fetchStockHistory());
+  }, [dispatch]);
 
   /* ── Local UI state ── */
-  const [activeTab, setActiveTab] = useState('transfers'); // 'transfers' | 'history'
+  const [activeTab, setActiveTab] = useState('transfers'); // 'transfers' | 'history' | 'stock'
   const [isAddOpen, setIsAddOpen] = useState(false);
   const [detailTransfer, setDetailTransfer] = useState(null);
   const [formData, setFormData] = useState(EMPTY_FORM);
@@ -87,7 +94,19 @@ const Transfers = () => {
       setFormError('Source and destination warehouses must differ.');
       return;
     }
+    // Record as local transfer UI entry
     dispatch(addTransfer({ ...formData, quantity: Number(formData.quantity) }));
+    // Also record as real StockHistory OUT entry (moving stock between hubs)
+    const product = inventoryItems.find((i) => i.name === formData.product);
+    if (product) {
+      dispatch(createStockEntry({
+        productId: product.id,
+        supplierId: null,
+        quantity: Number(formData.quantity),
+        type: TransactionType.OUT,
+        notes: formData.notes || `Transfer: ${formData.fromWarehouse} → ${formData.toWarehouse}`,
+      }));
+    }
     setFormData(EMPTY_FORM);
     setFormError('');
     setIsAddOpen(false);
@@ -123,6 +142,7 @@ const Transfers = () => {
           {[
             { key: 'transfers', icon: <ArrowLeftRight size={15} />, label: 'Transfer Log' },
             { key: 'history',   icon: <FileText size={15} />,       label: 'Product History' },
+            { key: 'stock',     icon: <Database size={15} />,       label: 'Stock Movements' },
           ].map((tab) => (
             <button
               key={tab.key}
@@ -301,6 +321,62 @@ const Transfers = () => {
                   </div>
                 );
               })}
+          </div>
+        </div>
+      )}
+
+      {/* ── STOCK MOVEMENTS TAB (real API data) ── */}
+      {activeTab === 'stock' && (
+        <div className="glass-panel" style={{ padding: 0 }}>
+          <div className="transfers-table-wrap">
+            {historyLoading ? (
+              <div className="transfers-empty">
+                <Clock size={36} style={{ opacity: 0.3 }} />
+                <p>Loading stock movements…</p>
+              </div>
+            ) : stockHistory.length === 0 ? (
+              <div className="transfers-empty">
+                <Database size={48} />
+                <p>No stock movement records found.</p>
+              </div>
+            ) : (
+              <table className="transfers-table">
+                <thead>
+                  <tr>
+                    <th>Type</th>
+                    <th>Product</th>
+                    <th>Qty</th>
+                    <th>Supplier</th>
+                    <th>Notes</th>
+                    <th>Date</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {stockHistory.map((h) => {
+                    const typeColors = { IN: 'var(--color-success)', OUT: 'var(--color-danger)', ADJUSTMENT: 'var(--neon-orange)' };
+                    return (
+                      <tr key={h.id}>
+                        <td>
+                          <span style={{
+                            padding: '3px 10px', borderRadius: '8px', fontSize: '0.75rem', fontWeight: 700,
+                            color: typeColors[h.typeName] || 'var(--text-muted)',
+                            background: `${typeColors[h.typeName]}18` || 'transparent',
+                            border: `1px solid ${typeColors[h.typeName]}33`,
+                          }}>
+                            {h.typeName}
+                          </span>
+                        </td>
+                        <td style={{ fontWeight: 600, color: 'var(--text-pure-white)' }}>{h.productName}</td>
+                        <td style={{ fontWeight: 700 }}>{h.quantity}</td>
+                        <td style={{ color: 'var(--text-muted)', fontSize: '0.85rem' }}>{h.supplierName || '—'}</td>
+                        <td style={{ color: 'var(--text-muted)', fontSize: '0.82rem', maxWidth: '180px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{h.notes || '—'}</td>
+                        <td style={{ color: 'var(--text-muted)', fontSize: '0.82rem', whiteSpace: 'nowrap' }}>{formatDate(h.createdAt)}</td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            )}
           </div>
         </div>
       )}

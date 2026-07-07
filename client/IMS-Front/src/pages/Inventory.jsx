@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { setFilters } from '../store/inventorySlice';
+import { setFilters, fetchProducts } from '../store/inventorySlice';
 import InventoryHeader from '../components/inventory/InventoryHeader';
 import InventoryStats from '../components/inventory/InventoryStats';
 import InventoryFilters from '../components/inventory/InventoryFilters';
@@ -11,7 +11,12 @@ import '../styles/pages/Inventory.css';
 
 const Inventory = () => {
   const dispatch = useDispatch();
-  const { filters } = useSelector((state) => state.inventory);
+  const { filters, loading } = useSelector((state) => state.inventory);
+
+  // Fetch from API on mount
+  useEffect(() => {
+    dispatch(fetchProducts());
+  }, [dispatch]);
 
   // Modal Triggers
   const [isModalOpen, setIsModalOpen] = useState(false);

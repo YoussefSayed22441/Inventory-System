@@ -5,7 +5,8 @@ import {
   Edit3, Lock, Bell, Moon, Globe, Save, Eye, EyeOff,
   Package, ArrowLeftRight, CheckCircle, AlertTriangle,
 } from 'lucide-react';
-import { logout } from '../store/authSlice';
+import { logout, updateUserData } from '../store/authSlice';
+import authService from '../services/authService';
 import '../styles/pages/Profile.css';
 
 /* ── Helpers ──────────────────────────────────────────────────────────────── */
@@ -68,7 +69,7 @@ const Profile = () => {
     autoLogout: true,
   });
 
-  const handlePwSave = (e) => {
+  const handlePwSave = async (e) => {
     e.preventDefault();
     if (!pwForm.current || !pwForm.newPw) {
       setPwMessage({ type: 'error', text: 'Please fill in all password fields.' });
@@ -82,9 +83,19 @@ const Profile = () => {
       setPwMessage({ type: 'error', text: 'Password must be at least 8 characters.' });
       return;
     }
-    setPwMessage({ type: 'success', text: 'Password updated successfully.' });
-    setPwForm({ current: '', newPw: '', confirm: '' });
-    setTimeout(() => setPwMessage(null), 3000);
+    try {
+      await authService.updateProfile({
+        currentPassword: pwForm.current,
+        newPassword:     pwForm.newPw,
+        confirmPassword: pwForm.confirm,
+      });
+      setPwMessage({ type: 'success', text: 'Password updated successfully.' });
+      setPwForm({ current: '', newPw: '', confirm: '' });
+      setTimeout(() => setPwMessage(null), 3000);
+    } catch (err) {
+      const msg = err?.response?.data?.message || 'Failed to update password. Please try again.';
+      setPwMessage({ type: 'error', text: msg });
+    }
   };
 
   const roleClass = currentUser.role?.toLowerCase() || 'operator';
@@ -286,7 +297,10 @@ const Profile = () => {
         <button
           className="btn"
           style={{ background: 'rgba(239,68,68,0.1)', color: 'var(--color-danger)', border: '1px solid rgba(239,68,68,0.25)' }}
-          onClick={() => dispatch(logout())}
+          onClick={async () => {
+            await authService.logout();  // invalidates server-side token
+            dispatch(logout());          // clears Redux + localStorage
+          }}
         >
           Sign Out of IMS Core
         </button>

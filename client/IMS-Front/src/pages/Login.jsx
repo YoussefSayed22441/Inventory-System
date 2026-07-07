@@ -3,48 +3,48 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { loginStart, loginSuccess, loginFailure } from '../store/authSlice';
 import authService from '../services/authService';
-import './Login.css';
+import '../styles/pages/Login.css';
 
 /* ── icons (inline SVG, no dependency) ─────────────────────────────── */
 const EyeIcon = ({ open }) =>
   open ? (
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
-      <circle cx="12" cy="12" r="3"/>
+      <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+      <circle cx="12" cy="12" r="3" />
     </svg>
   ) : (
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/>
-      <path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/>
-      <line x1="1" y1="1" x2="23" y2="23"/>
+      <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94" />
+      <path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19" />
+      <line x1="1" y1="1" x2="23" y2="23" />
     </svg>
   );
 
 const UserIcon = () => (
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
-    <circle cx="12" cy="7" r="4"/>
+    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+    <circle cx="12" cy="7" r="4" />
   </svg>
 );
 
 const MailIcon = () => (
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <rect x="2" y="4" width="20" height="16" rx="2"/>
-    <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>
+    <rect x="2" y="4" width="20" height="16" rx="2" />
+    <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
   </svg>
 );
 
 const LockIcon = () => (
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
-    <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+    <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+    <path d="M7 11V7a5 5 0 0 1 10 0v4" />
   </svg>
 );
 
 const SpinnerIcon = () => (
   <svg className="lp-spinner" viewBox="0 0 24 24" fill="none">
-    <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="3" strokeOpacity="0.25"/>
-    <path d="M12 2a10 10 0 0 1 10 10" stroke="currentColor" strokeWidth="3" strokeLinecap="round"/>
+    <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="3" strokeOpacity="0.25" />
+    <path d="M12 2a10 10 0 0 1 10 10" stroke="currentColor" strokeWidth="3" strokeLinecap="round" />
   </svg>
 );
 
@@ -92,21 +92,21 @@ export default function Login() {
   const [tab, setTab] = useState('login'); // 'login' | 'signup'
 
   /* Login fields */
-  const [loginEmail,    setLoginEmail]    = useState('');
+  const [loginEmail, setLoginEmail] = useState('');
   const [loginPassword, setLoginPassword] = useState('');
-  const [showLoginPwd,  setShowLoginPwd]  = useState(false);
+  const [showLoginPwd, setShowLoginPwd] = useState(false);
 
   /* Signup fields */
-  const [signupName,     setSignupName]     = useState('');
-  const [signupEmail,    setSignupEmail]    = useState('');
+  const [signupName, setSignupName] = useState('');
+  const [signupEmail, setSignupEmail] = useState('');
   const [signupPassword, setSignupPassword] = useState('');
-  const [signupConfirm,  setSignupConfirm]  = useState('');
-  const [showSignupPwd,  setShowSignupPwd]  = useState(false);
+  const [signupConfirm, setSignupConfirm] = useState('');
+  const [showSignupPwd, setShowSignupPwd] = useState(false);
   const [showConfirmPwd, setShowConfirmPwd] = useState(false);
 
   /* Local validation errors */
   const [fieldErrors, setFieldErrors] = useState({});
-  const [localError,  setLocalError]  = useState('');
+  const [localError, setLocalError] = useState('');
 
   const clearErrors = () => { setFieldErrors({}); setLocalError(''); };
 
@@ -115,14 +115,15 @@ export default function Login() {
     e.preventDefault();
     clearErrors();
     const errs = {};
-    if (!loginEmail.trim())    errs.loginEmail    = 'Email is required';
+    if (!loginEmail.trim()) errs.loginEmail = 'Email is required';
     if (!loginPassword.trim()) errs.loginPassword = 'Password is required';
     if (Object.keys(errs).length) { setFieldErrors(errs); return; }
 
     dispatch(loginStart());
     try {
       const data = await authService.login({ email: loginEmail, password: loginPassword });
-      dispatch(loginSuccess({ user: data.user, token: data.token }));
+      // authService.login returns { name, email, token, refreshToken, ... }
+      dispatch(loginSuccess(data));
       navigate('/');
     } catch (err) {
       const msg = err?.response?.data?.message || 'Invalid credentials. Please try again.';
@@ -135,19 +136,23 @@ export default function Login() {
     e.preventDefault();
     clearErrors();
     const errs = {};
-    if (!signupName.trim())                                   errs.signupName     = 'Full name is required';
-    if (!signupEmail.trim())                                  errs.signupEmail    = 'Email is required';
-    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(signupEmail)) errs.signupEmail   = 'Enter a valid email';
-    if (signupPassword.length < 8)                            errs.signupPassword = 'At least 8 characters required';
-    if (signupConfirm !== signupPassword)                     errs.signupConfirm  = 'Passwords do not match';
+    if (!signupName.trim()) errs.signupName = 'Full name is required';
+    if (!signupEmail.trim()) errs.signupEmail = 'Email is required';
+    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(signupEmail)) errs.signupEmail = 'Enter a valid email';
+    if (signupPassword.length < 8) errs.signupPassword = 'At least 8 characters required';
+    if (signupConfirm !== signupPassword) errs.signupConfirm = 'Passwords do not match';
     if (Object.keys(errs).length) { setFieldErrors(errs); return; }
 
     dispatch(loginStart());
     try {
       const data = await authService.register({
-        name: signupName, email: signupEmail, password: signupPassword,
+        name:            signupName,
+        email:           signupEmail,
+        password:        signupPassword,
+        confirmPassword: signupConfirm,
       });
-      dispatch(loginSuccess({ user: data.user, token: data.token }));
+      // authService.register returns normalized { name, email, token, refreshToken, ... }
+      dispatch(loginSuccess(data));
       navigate('/');
     } catch (err) {
       const msg = err?.response?.data?.message || 'Registration failed. Please try again.';
@@ -166,10 +171,10 @@ export default function Login() {
         <div className="lp-brand">
           <div className="lp-brand__icon">
             <svg viewBox="0 0 40 40" fill="none">
-              <rect width="40" height="40" rx="10" fill="var(--neon-orange)" fillOpacity="0.15"/>
-              <path d="M8 28V16l12-8 12 8v12" stroke="var(--neon-orange)" strokeWidth="2" strokeLinejoin="round"/>
-              <rect x="15" y="20" width="10" height="8" rx="1" stroke="var(--neon-orange)" strokeWidth="2"/>
-              <path d="M20 20v8" stroke="var(--neon-orange)" strokeWidth="1.5"/>
+              <rect width="40" height="40" rx="10" fill="var(--neon-orange)" fillOpacity="0.15" />
+              <path d="M8 28V16l12-8 12 8v12" stroke="var(--neon-orange)" strokeWidth="2" strokeLinejoin="round" />
+              <rect x="15" y="20" width="10" height="8" rx="1" stroke="var(--neon-orange)" strokeWidth="2" />
+              <path d="M20 20v8" stroke="var(--neon-orange)" strokeWidth="1.5" />
             </svg>
           </div>
           <div>
@@ -206,9 +211,9 @@ export default function Login() {
         {(reduxError || localError) && (
           <div className="lp-error-banner" role="alert">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <circle cx="12" cy="12" r="10"/>
-              <line x1="12" y1="8" x2="12" y2="12"/>
-              <line x1="12" y1="16" x2="12.01" y2="16"/>
+              <circle cx="12" cy="12" r="10" />
+              <line x1="12" y1="8" x2="12" y2="12" />
+              <line x1="12" y1="16" x2="12.01" y2="16" />
             </svg>
             {reduxError || localError}
           </div>
@@ -376,7 +381,7 @@ function PasswordStrength({ password }) {
     /[0-9]/.test(password),
     /[^A-Za-z0-9]/.test(password),
   ];
-  const score  = checks.filter(Boolean).length;
+  const score = checks.filter(Boolean).length;
   const labels = ['', 'Weak', 'Fair', 'Good', 'Strong'];
   const colors = ['', '#ef4444', '#f59e0b', '#3b82f6', '#10b981'];
 
