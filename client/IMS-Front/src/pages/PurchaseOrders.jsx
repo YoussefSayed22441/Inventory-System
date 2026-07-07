@@ -1,38 +1,39 @@
 import React from 'react';
+import { useSelector } from 'react-redux';
 
 const PurchaseOrders = () => {
+  const { items } = useSelector((s) => s.inventory);
+  const totalValue = items.reduce((acc, i) => acc + (i.costPrice ?? 0) * (i.quantity ?? 0), 0);
+
+  const stats = [
+    { label: 'Open Orders',    value: '—',                          color: 'var(--neon-orange)' },
+    { label: 'Total PO Value', value: `$${totalValue.toLocaleString('en-US', { maximumFractionDigits: 0 })}`, color: 'var(--neon-blue-data)' },
+    { label: 'Received',       value: '—',                          color: 'var(--color-success)' },
+  ];
+
   return (
     <div className="page-container">
       <div className="page-header">
         <h1 className="page-title">Purchase Orders</h1>
-        <p className="page-subtitle">Manage supply acquisition and purchase requisitions</p>
+        <p className="page-subtitle">Manage supplier purchase orders and inbound stock requisitions</p>
       </div>
 
       <div className="grid-container">
-        <div className="glass-card glow-orange">
-          <h3>Active Requests</h3>
-          <p className="stat-number">8</p>
-          <span className="stat-trend orange">4 pending approval</span>
-        </div>
-        <div className="glass-card glow-blue">
-          <h3>Total Expenditure</h3>
-          <p className="stat-number">$24,850</p>
-          <span className="stat-trend green">-12% vs last month</span>
-        </div>
-        <div className="glass-card glow-blue">
-          <h3>Fulfilled Orders</h3>
-          <p className="stat-number">142</p>
-          <span className="stat-trend blue">98.2% fulfillment rate</span>
-        </div>
+        {stats.map((s) => (
+          <div key={s.label} className="glass-card glow-blue">
+            <h3 style={{ color: 'var(--text-muted)', fontSize: '0.85rem', fontWeight: 600 }}>{s.label}</h3>
+            <p className="stat-number" style={{ color: s.color }}>{s.value}</p>
+          </div>
+        ))}
       </div>
 
-      <div className="glass-panel">
-        <h2>Purchase Logs</h2>
-        <div style={{ marginTop: '16px', padding: '24px', background: 'rgba(0,0,0,0.1)', borderRadius: '12px', border: '1px dashed var(--glass-border)' }}>
-          <p style={{ color: 'var(--text-muted)', textAlign: 'center' }}>
-            Loading supply purchase logs...
-          </p>
-        </div>
+      <div className="glass-panel" style={{ marginTop: '2rem', padding: '3rem', textAlign: 'center' }}>
+        <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>📦</div>
+        <h2 style={{ color: 'var(--text-primary)', marginBottom: '0.5rem' }}>Purchase Orders Coming Soon</h2>
+        <p style={{ color: 'var(--text-muted)', maxWidth: '480px', margin: '0 auto', lineHeight: 1.7 }}>
+          The Purchase Orders module is not yet available in the backend API.
+          Use <strong>Stock History</strong> (Transfers page) to record incoming stock using <em>IN</em> transactions.
+        </p>
       </div>
     </div>
   );

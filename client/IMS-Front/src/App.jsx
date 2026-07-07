@@ -23,6 +23,7 @@ import Users from "./pages/Users";
 import Settings from "./pages/Settings";
 import Finance from "./pages/Finance";
 import Pos from "./pages/Pos";
+import Profile from "./pages/Profile";
 
 function App() {
   const location = useLocation();
@@ -85,6 +86,7 @@ function App() {
             <Route path="/settings" element={<Settings />} />
             <Route path="/finance" element={<Finance />} />
             <Route path="/pos" element={<Pos />} />
+            <Route path="/profile" element={<Profile />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </main>

@@ -1,31 +1,82 @@
-import axios from "axios";
+import axios from 'axios';
+import api from './axiosInstance';
 
-const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000/api";
+const BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+
+/* ── Normalizer: backend UserDto → frontend user shape ───────────────────── */
+const normalizeUser = (dto) => ({
+  name:         dto.fullName  || dto.displayName || '',
+  username:     dto.userName  || dto.username    || '',
+  email:        dto.email     || '',
+  role:         dto.role      || 'Operator',
+  token:        dto.jWTAuth?.accessToken  || '',
+  refreshToken: dto.jWTAuth?.refreshToken || '',
+});
 
 const authService = {
-  login: async (credentials) => {
-    const response = await axios.post(`${API_URL}/auth/login`, credentials);
-    return response.data;
+  /** POST /api/auth/Login  — { email, password } */
+  login: async ({ email, password }) => {
+    const res = await axios.post(`${BASE_URL}/auth/Login`, { email, password });
+    const dto = res.data?.data;
+    return normalizeUser(dto);
   },
 
-  register: async (userData) => {
-    const response = await axios.post(`${API_URL}/auth/register`, userData);
-    return response.data;
+  /**
+   * POST /api/auth/Register
+   * Backend expects: DisplayName, UserName, Email, PhoneNumber, Password, ConfirmPassword
+   */
+  register: async ({ name, username, email, phone, password, confirmPassword }) => {
+    const res = await axios.post(`${BASE_URL}/auth/Register`, {
+      displayName:     name,
+      userName:        username || email.split('@')[0],
+      email,
+      phoneNumber:     phone || '',
+      password,
+      confirmPassword: confirmPassword || password,
+    });
+    const dto = res.data?.data;
+    return normalizeUser(dto);
   },
-  
+
+  /** POST /api/auth/Logout — requires Bearer token (sent by axiosInstance) */
   logout: async () => {
-    // Perform any API logout if needed
-    return true;
+    try {
+      const refreshToken = localStorage.getItem('refreshToken');
+      await api.post('/auth/Logout', { refreshToken });
+    } catch (_) {
+      // silently ignore — clear local storage regardless
+    }
+    localStorage.removeItem('token');
+    localStorage.removeItem('refreshToken');
+    localStorage.removeItem('user');
+  },
+
+  /** POST /api/auth/RefreshToken */
+  refreshToken: async () => {
+    const accessToken  = localStorage.getItem('token');
+    const refreshToken = localStorage.getItem('refreshToken');
+    const res = await axios.post(`${BASE_URL}/auth/RefreshToken`, { accessToken, refreshToken });
+    const dto = res.data?.data;
+    return normalizeUser(dto);
+  },
+
+  /** PUT /api/auth/Profile — update own account */
+  updateProfile: async (data) => {
+    const res = await api.put('/auth/Profile', data);
+    return res.data?.data;
+  },
+
+  /** DELETE /api/auth/Profile — delete own account */
+  deleteAccount: async () => {
+    await api.delete('/auth/Profile');
   },
 
   getCurrentUser: () => {
-    const user = localStorage.getItem("user");
+    const user = localStorage.getItem('user');
     return user ? JSON.parse(user) : null;
   },
 
-  getToken: () => {
-    return localStorage.getItem("token");
-  }
+  getToken: () => localStorage.getItem('token'),
 };
 
 export default authService;

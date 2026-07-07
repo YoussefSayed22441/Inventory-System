@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { setSearchQuery } from '../store/categorySlice';
+import { setSearchQuery, fetchCategories } from '../store/categorySlice';
 import CategoryHeader from '../components/categories/CategoryHeader';
 import CategoryStats from '../components/categories/CategoryStats';
 import CategoryTable from '../components/categories/CategoryTable';
@@ -8,8 +8,13 @@ import CategoryModal from '../components/categories/CategoryModal';
 import '../styles/pages/Categories.css';
 
 const Categories = () => {
-  const dispatch = useDispatch();
+  const dispatch    = useDispatch();
   const searchQuery = useSelector((state) => state.categories.searchQuery);
+
+  // Fetch from API on mount
+  useEffect(() => {
+    dispatch(fetchCategories());
+  }, [dispatch]);
 
   // Modal Open/Close triggers
   const [isModalOpen, setIsModalOpen] = useState(false);

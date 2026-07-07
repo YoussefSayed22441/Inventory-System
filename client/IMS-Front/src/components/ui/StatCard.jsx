@@ -1,8 +1,32 @@
 import React from 'react';
 
-const StatCard = ({ icon: Icon, title, value, trend, glowVariant = 'blue' }) => {
-  // Map our glowing variant classes
+/* Resolve accent color from glowVariant string */
+const resolveColor = (glowVariant) => {
+  switch (glowVariant) {
+    case 'orange': return 'var(--neon-orange)';
+    case 'green':  return 'var(--color-success)';
+    case 'red':    return 'var(--color-danger)';
+    case 'blue':
+    default:       return 'var(--neon-blue-data)';
+  }
+};
+
+/* Icon background / border also follow variant */
+const resolveIconStyle = (glowVariant) => {
+  switch (glowVariant) {
+    case 'orange': return { bg: 'rgba(255,107,0,0.1)',   border: 'var(--glass-border-orange)', color: 'var(--neon-orange)'    };
+    case 'green':  return { bg: 'rgba(16,185,129,0.1)',  border: 'rgba(16,185,129,0.2)',       color: 'var(--color-success)'  };
+    case 'red':    return { bg: 'rgba(239,68,68,0.1)',   border: 'rgba(239,68,68,0.2)',        color: 'var(--color-danger)'   };
+    case 'blue':
+    default:       return { bg: 'rgba(47,128,255,0.1)',  border: 'var(--glass-border-blue)',   color: 'var(--neon-blue-data)' };
+  }
+};
+
+const StatCard = ({ icon: Icon, title, value, trend, glowVariant = 'blue', valueColor }) => {
+  /* glow border class — keep blue for green/red variants (no separate css class needed) */
   const glowClass = glowVariant === 'orange' ? 'glow-orange' : 'glow-blue';
+  const numColor  = valueColor || resolveColor(glowVariant);
+  const iconStyle = resolveIconStyle(glowVariant);
 
   return (
     <div className={`glass-card ${glowClass}`}>
@@ -11,19 +35,22 @@ const StatCard = ({ icon: Icon, title, value, trend, glowVariant = 'blue' }) => 
           <span style={{ color: 'var(--text-muted)', fontSize: '0.9rem', fontWeight: '500' }}>
             {title}
           </span>
-          <p className="stat-number">{value}</p>
+          <p className="stat-number" style={{ color: numColor }}>
+            {value}
+          </p>
         </div>
         {Icon && (
-          <div 
-            style={{ 
-              padding: '12px', 
-              borderRadius: '12px', 
-              background: glowVariant === 'orange' ? 'rgba(255, 107, 0, 0.1)' : 'rgba(47, 128, 255, 0.1)',
-              border: `1px solid ${glowVariant === 'orange' ? 'var(--glass-border-orange)' : 'var(--glass-border-blue)'}`,
-              color: glowVariant === 'orange' ? 'var(--neon-orange)' : 'var(--neon-blue-data)',
+          <div
+            style={{
+              padding: '12px',
+              borderRadius: '12px',
+              background: iconStyle.bg,
+              border: `1px solid ${iconStyle.border}`,
+              color: iconStyle.color,
               display: 'flex',
               alignItems: 'center',
-              justifycontent: 'center'
+              justifyContent: 'center',
+              flexShrink: 0,
             }}
           >
             <Icon size={24} />

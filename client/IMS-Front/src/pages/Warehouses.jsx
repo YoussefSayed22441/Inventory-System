@@ -10,18 +10,18 @@ const Warehouses = () => {
 
       <div className="grid-container">
         <div className="glass-card glow-blue">
-          <h3>Active Hubs</h3>
-          <p className="stat-number">4</p>
+          <h3 style={{ color: 'var(--text-muted)', fontSize: '0.85rem', fontWeight: 600 }}>Active Hubs</h3>
+          <p className="stat-number" style={{ color: 'var(--color-success)' }}>4</p>
           <span className="stat-trend green">All operational</span>
         </div>
         <div className="glass-card glow-blue">
-          <h3>Storage Capacity</h3>
-          <p className="stat-number">72%</p>
+          <h3 style={{ color: 'var(--text-muted)', fontSize: '0.85rem', fontWeight: 600 }}>Storage Capacity</h3>
+          <p className="stat-number" style={{ color: 'var(--neon-orange)' }}>72%</p>
           <span className="stat-trend blue">28% remaining</span>
         </div>
         <div className="glass-card glow-orange">
-          <h3>Flagged Issues</h3>
-          <p className="stat-number">0</p>
+          <h3 style={{ color: 'var(--text-muted)', fontSize: '0.85rem', fontWeight: 600 }}>Flagged Issues</h3>
+          <p className="stat-number" style={{ color: 'var(--neon-blue-data)' }}>0</p>
           <span className="stat-trend green">No warnings reported</span>
         </div>
       </div>
