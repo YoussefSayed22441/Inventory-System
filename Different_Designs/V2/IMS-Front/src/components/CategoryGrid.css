@@ -1,0 +1,256 @@
+.category-grid-container {
+  padding: var(--space-lg);
+  min-height: 100vh;
+  /* Using the stage gradient from variables */
+  background: var(--bg-stage-gradient);
+  font-family: 'Inter', 'Roboto', sans-serif; /* Fallback modern fonts */
+}
+
+/* Header Section */
+.category-grid-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 40px;
+  flex-wrap: wrap;
+  gap: var(--space-md);
+}
+
+/* Neon Search Bar */
+.neon-search-container {
+  position: relative;
+  flex: 1;
+  max-width: 400px;
+}
+
+.neon-search-input {
+  width: 100%;
+  padding: 12px 16px 12px 48px;
+  background: var(--glass-surface);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius);
+  color: var(--text-pure-white);
+  font-size: 16px;
+  outline: none;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(20px);
+}
+
+.neon-search-input:focus {
+  border-color: var(--neon-orange);
+  box-shadow: var(--neon-orange-glow);
+}
+
+.neon-search-input::placeholder {
+  color: var(--text-muted);
+}
+
+.search-icon {
+  position: absolute;
+  left: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--neon-orange);
+  width: 20px;
+  height: 20px;
+}
+
+/* Geometric Action Button */
+.btn-geometric {
+  background: transparent;
+  color: var(--neon-orange);
+  border: 1px solid var(--neon-orange);
+  padding: 12px 32px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  cursor: pointer;
+  position: relative;
+  clip-path: polygon(10% 0, 100% 0, 90% 100%, 0% 100%); /* Asymmetric cut */
+  transition: all 0.3s ease;
+  outline: none;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.btn-geometric::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 106, 0, 0.4), transparent);
+  transition: all 0.4s ease;
+}
+
+.btn-geometric:hover {
+  background: rgba(255, 106, 0, 0.1);
+  box-shadow: var(--neon-orange-glow);
+  text-shadow: 0 0 8px var(--neon-orange);
+}
+
+.btn-geometric:hover::before {
+  left: 100%;
+}
+
+/* Grid Layout */
+.category-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 24px;
+}
+
+/* Glassmorphism Card */
+.category-card {
+  background: var(--glass-surface);
+  border: 1px solid var(--glass-border);
+  border-radius: 12px;
+  padding: 24px;
+  position: relative;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  box-shadow: var(--glass-shadow);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  cursor: pointer;
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s ease, border-color 0.4s ease;
+  overflow: hidden;
+}
+
+/* Inner highlight for premium feel */
+.category-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  box-shadow: inset 0 1px 1px rgba(255,255,255,0.1);
+  pointer-events: none;
+}
+
+.category-card:hover {
+  transform: translateY(-8px);
+  border-color: var(--neon-orange);
+  /* Dual box-shadow: inner glow + outer aura */
+  box-shadow: inset 0 0 15px rgba(255, 106, 0, 0.3), var(--neon-orange-glow), 0 20px 40px rgba(0,0,0,0.6);
+}
+
+/* Card Content */
+.card-content {
+  display: flex;
+  flex-direction: column;
+  z-index: 1;
+}
+
+.category-title {
+  color: var(--text-pure-white);
+  font-size: 24px;
+  font-weight: 700;
+  margin: 0 0 8px 0;
+  letter-spacing: 0.5px;
+  background: linear-gradient(90deg, var(--text-pure-white), var(--text-primary));
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  transition: all 0.3s ease;
+}
+
+/* Text Shimmer Effect */
+.category-card:hover .category-title {
+  background: linear-gradient(90deg, var(--neon-orange), #FF8C42, var(--neon-orange));
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: shimmer 2s linear infinite;
+  text-shadow: 0 0 8px rgba(255, 106, 0, 0.5); /* extra neon pop */
+}
+
+@keyframes shimmer {
+  to {
+    background-position: 200% center;
+  }
+}
+
+.category-desc {
+  color: var(--text-muted);
+  font-size: 14px;
+  line-height: 1.5;
+  margin: 0;
+}
+
+/* Interactive Floating Badge */
+.status-badge {
+  align-self: flex-start;
+  background: rgba(0, 0, 0, 0.4);
+  border: 1px solid var(--glass-border);
+  color: var(--neon-blue-data);
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  animation: pulse-glow 4s infinite alternate;
+  z-index: 1;
+}
+
+.status-badge-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: var(--neon-blue-data);
+  box-shadow: 0 0 5px var(--neon-blue-data);
+}
+
+@keyframes pulse-glow {
+  0% {
+    box-shadow: 0 0 0px var(--neon-blue-dim);
+    background: rgba(0, 0, 0, 0.4);
+  }
+  50% {
+    box-shadow: 0 0 10px var(--neon-blue-dim);
+    background: rgba(0, 229, 255, 0.05);
+  }
+  100% {
+    box-shadow: 0 0 0px var(--neon-blue-dim);
+    background: rgba(0, 0, 0, 0.4);
+  }
+}
+
+/* Decorative Sci-Fi UI Elements in Card */
+.card-decor-line {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 40%;
+  height: 2px;
+  background: var(--glass-border);
+  transition: all 0.3s ease;
+}
+
+.category-card:hover .card-decor-line {
+  background: var(--neon-orange);
+  box-shadow: var(--neon-orange-glow);
+  width: 100%;
+}
+
+.card-decor-corner {
+  position: absolute;
+  top: -1px;
+  left: -1px;
+  width: 20px;
+  height: 20px;
+  border-top: 2px solid transparent;
+  border-left: 2px solid transparent;
+  transition: all 0.3s ease;
+}
+
+.category-card:hover .card-decor-corner {
+  border-color: var(--neon-orange);
+  box-shadow: -2px -2px 10px rgba(255,106,0,0.4);
+}

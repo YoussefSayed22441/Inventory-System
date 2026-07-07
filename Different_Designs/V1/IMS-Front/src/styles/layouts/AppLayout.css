@@ -1,0 +1,30 @@
+.app-layout {
+  display: flex;
+  min-height: 100vh;
+  width: 100%;
+}
+
+.app-main-wrapper {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  /* Sidebar width is handled via margin or flex layout */
+  /* Sidebar uses position fixed, so we need left margin on the wrapper to avoid overlap */
+  margin-left: 80px; /* Default sidebar width */
+  transition: margin-left 0.3s ease;
+  min-width: 0; /* Prevents flexbox overflow issues */
+}
+
+/* When sidebar expands, we keep margin 80px so it floats over, or push content?
+   Cyberpunk sidebars usually float over with a glass blur, so we will keep the margin at 80px
+   and let it overlay the content.
+*/
+
+.app-main-content {
+  flex: 1;
+  padding: var(--space-lg);
+  overflow-y: auto;
+  min-height: calc(100vh - 70px); /* Adjust based on Navbar height */
+  position: relative;
+  z-index: 1;
+}
