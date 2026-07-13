@@ -2,7 +2,7 @@ import { useState } from 'react';
 import './App.css';
 import { Routes, Route, useLocation, useNavigate } from "react-router-dom";
 
-import BoxIntroAnimation from './components/ui/BoxIntroAnimation';
+import CinematicIntro from './components/ui/CinematicIntro';
 import ProtectedRoute from "./components/auth/ProtectedRoute"
 
 import Navbar from './layouts/Navbar';
@@ -32,13 +32,10 @@ function App() {
   const showLayout = location.pathname !== '/login';
   const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
 
-  // Show the box intro only on the very first visit
-  const [showIntro, setShowIntro] = useState(
-    () => !localStorage.getItem('ims_intro_done')
-  );
+  // Show cinematic intro on every load; dismissed by the animation itself
+  const [showIntro, setShowIntro] = useState(true);
 
   const handleIntroComplete = () => {
-    localStorage.setItem('ims_intro_done', '1');
     setShowIntro(false);
     navigate('/login');
   };
@@ -49,7 +46,7 @@ function App() {
 
       {/* First-visit box animation — renders above everything */}
       {showIntro && (
-        <BoxIntroAnimation onComplete={handleIntroComplete} />
+        <CinematicIntro onComplete={handleIntroComplete} />
       )}
       {showLayout && (
         <Sidebar
