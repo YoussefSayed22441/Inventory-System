@@ -47,6 +47,17 @@ namespace Inventory_System.API
                     }
                 });
             });
+            //CORS
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowFrontend", policy =>
+    {
+        policy.WithOrigins("http://localhost:5173")
+              .AllowAnyHeader()
+              .AllowAnyMethod()
+              .AllowCredentials(); // only if you're using cookies/auth
+    });
+});
 
             // ✅ Dependency Injections
             builder.Services.AddInfrastructureDependencies(builder.Configuration)
@@ -86,7 +97,7 @@ namespace Inventory_System.API
 
             app.UseHttpsRedirection();
 
-            app.UseAuthentication();
+            app.UseCors("AllowFrontend");
             app.UseAuthentication();
             app.UseAuthorization();
             app.MapControllers();
