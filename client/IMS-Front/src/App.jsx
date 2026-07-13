@@ -3,7 +3,6 @@ import './App.css';
 import { Routes, Route, useLocation, useNavigate } from "react-router-dom";
 
 import CinematicIntro from './components/ui/CinematicIntro';
-import ProtectedRoute from "./components/auth/ProtectedRoute"
 
 import Navbar from './layouts/Navbar';
 import Sidebar from './layouts/Sidebar';
@@ -25,6 +24,7 @@ import Transfers from "./pages/Transfers";
 // import Finance from "./pages/Finance";
 // import Pos from "./pages/Pos";
 import Profile from "./pages/Profile";
+import Analytics from "./pages/Analytics";
 
 function App() {
   const location = useLocation();
@@ -32,10 +32,12 @@ function App() {
   const showLayout = location.pathname !== '/login';
   const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
 
-  // Show cinematic intro on every load; dismissed by the animation itself
-  const [showIntro, setShowIntro] = useState(true);
+  // Show the cinematic intro only ONCE per browser-tab session.
+  // sessionStorage persists across in-page navigations but resets on a new tab.
+  const [showIntro, setShowIntro] = useState(() => !sessionStorage.getItem('introSeen'));
 
   const handleIntroComplete = () => {
+    sessionStorage.setItem('introSeen', '1');
     setShowIntro(false);
     navigate('/login');
   };
@@ -71,11 +73,12 @@ function App() {
         <main className="page-body">
           <Routes>
             <Route path="/login" element={<Login />} />
-            <Route path='/' element={<ProtectedRoute><Home /></ProtectedRoute>} />
+            <Route path='/' element={<Home />} />
             <Route path="/inventory" element={<Inventory />} />
             <Route path="/categories" element={<Categories />} />
             <Route path="/suppliers" element={<Suppliers />} />
             <Route path="/transfers" element={<Transfers />} />
+            <Route path="/analytics" element={<Analytics />} />
             {/* Orphaned/Mock Features Commented Out:
             <Route path="/purchase-orders" element={<PurchaseOrders />} />
             <Route path="/sales-orders" element={<SalesOrders />} />
