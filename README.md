@@ -43,7 +43,7 @@
 * [.NET 10 SDK](https://dotnet.microsoft.com/)
 * SQL Server
 
-### 1. Backend Setup (Port 5280)
+### 1. Backend Setup
 Navigate to the API directory, apply the database migrations, and start the server:
 ` ` `bash
 cd server/Inventory-System/Inventory-System.API
@@ -51,14 +51,12 @@ dotnet ef database update
 dotnet run
 ` ` `
 
-### 2. Frontend Setup (Port 5173)
+### 2. Frontend Setup
 Navigate to the React client, install dependencies, and start the development server:
 ` ` `bash
 cd client/IMS-Front
 npm install
 
-# Ensure your .env file is created in the root of IMS-Front and contains: 
-# VITE_API_URL=http://localhost:5280/api
 
 npm run dev
 ` ` `
