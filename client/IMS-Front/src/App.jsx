@@ -2,7 +2,7 @@ import { useState } from 'react';
 import './App.css';
 import { Routes, Route, useLocation, useNavigate } from "react-router-dom";
 
-import BoxIntroAnimation from './components/ui/BoxIntroAnimation';
+import CinematicIntro from './components/ui/CinematicIntro';
 
 import Navbar from './layouts/Navbar';
 import Sidebar from './layouts/Sidebar';
@@ -48,7 +48,7 @@ function App() {
 
       {/* First-visit box animation — renders above everything */}
       {showIntro && (
-        <BoxIntroAnimation onComplete={handleIntroComplete} />
+        <CinematicIntro onComplete={handleIntroComplete} />
       )}
       {showLayout && (
         <Sidebar

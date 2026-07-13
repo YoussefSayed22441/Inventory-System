@@ -8,9 +8,12 @@ const normalizeUser = (dto) => ({
   name:         dto.fullName  || dto.displayName || '',
   username:     dto.userName  || dto.username    || '',
   email:        dto.email     || '',
+  // role is now returned by the server in UserDto.Role
   role:         dto.role      || 'Operator',
-  token:        dto.jWTAuth?.accessToken  || '',
-  refreshToken: dto.jWTAuth?.refreshToken || '',
+  token:        dto.jWTAuth?.accessToken              || '',
+  // jWTAuth.refreshToken is a RefreshToken object { tokenString, expireAt },
+  // so we must read .tokenString to get the plain string value.
+  refreshToken: dto.jWTAuth?.refreshToken?.tokenString || '',
 });
 
 const authService = {
@@ -38,10 +41,12 @@ const authService = {
     return normalizeUser(dto);
   },
 
-  /** POST /api/auth/Logout — requires Bearer token (sent by axiosInstance) */
+  /** POST /api/auth/Logout — requires Bearer token (sent automatically by axiosInstance) */
   logout: async () => {
     try {
       const refreshToken = localStorage.getItem('refreshToken');
+      // Only send the RefreshToken in the body; the server reads the AccessToken
+      // from the Authorization header that axiosInstance injects automatically.
       await api.post('/auth/Logout', { refreshToken });
     } catch (_) {
       // silently ignore — clear local storage regardless
@@ -55,9 +60,14 @@ const authService = {
   refreshToken: async () => {
     const accessToken  = localStorage.getItem('token');
     const refreshToken = localStorage.getItem('refreshToken');
+    // The RefreshToken endpoint returns Result<JWTAuthResult> (flat), not a
+    // UserDto — so we must NOT pipe through normalizeUser().
     const res = await axios.post(`${BASE_URL}/auth/RefreshToken`, { accessToken, refreshToken });
-    const dto = res.data?.data;
-    return normalizeUser(dto);
+    const data = res.data?.data; // JWTAuthResult
+    return {
+      token:        data?.accessToken                    || '',
+      refreshToken: data?.refreshToken?.tokenString      || '',
+    };
   },
 
   /** PUT /api/auth/Profile — update own account */
@@ -66,9 +76,10 @@ const authService = {
     return res.data?.data;
   },
 
-  /** DELETE /api/auth/Profile — delete own account */
-  deleteAccount: async () => {
-    await api.delete('/auth/Profile');
+  /** DELETE /api/auth/Profile — delete own account (requires current password) */
+  deleteAccount: async (password) => {
+    // axios DELETE with a body requires the `data` key in the config object
+    await api.delete('/auth/Profile', { data: { password } });
   },
 
   getCurrentUser: () => {

@@ -34,8 +34,7 @@ const notificationService = {
   /** GET /api/notification?UnreadOnly=true */
   getUnread: async () => {
     const res = await api.get('/notification', { params: { UnreadOnly: true } });
-    const rows = res.data?.data?.data ?? res.data?.data ?? [];
-    return Array.isArray(rows) ? rows.map(normalize) : [];
+    return unwrapList(res.data).items;
   },
 
   /** GET /api/notification/:id */

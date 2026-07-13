@@ -61,6 +61,10 @@ const Profile = () => {
   const [pwForm, setPwForm]           = useState({ current: '', newPw: '', confirm: '' });
   const [pwMessage, setPwMessage]     = useState(null);
 
+  // Account deletion state
+  const [deletePassword, setDeletePassword] = useState('');
+  const [deleteMessage, setDeleteMessage]   = useState(null);
+
   // Preferences state
   const [prefs, setPrefs] = useState({
     notifications: true,
@@ -95,6 +99,23 @@ const Profile = () => {
     } catch (err) {
       const msg = err?.response?.data?.message || 'Failed to update password. Please try again.';
       setPwMessage({ type: 'error', text: msg });
+    }
+  };
+
+  const handleDeleteAccount = async () => {
+    if (!deletePassword) {
+      setDeleteMessage({ type: 'error', text: 'Password is required to delete account.' });
+      return;
+    }
+    if (!window.confirm("Are you ABSOLUTELY sure you want to delete your account? This action cannot be undone.")) {
+      return;
+    }
+    try {
+      await authService.deleteAccount(deletePassword);
+      dispatch(logout());
+    } catch (err) {
+      const msg = err?.response?.data?.message || 'Failed to delete account. Incorrect password?';
+      setDeleteMessage({ type: 'error', text: msg });
     }
   };
 
@@ -296,7 +317,7 @@ const Profile = () => {
         </p>
         <button
           className="btn"
-          style={{ background: 'rgba(239,68,68,0.1)', color: 'var(--color-danger)', border: '1px solid rgba(239,68,68,0.25)' }}
+          style={{ background: 'rgba(239,68,68,0.1)', color: 'var(--color-danger)', border: '1px solid rgba(239,68,68,0.25)', marginBottom: '24px' }}
           onClick={async () => {
             await authService.logout();  // invalidates server-side token
             dispatch(logout());          // clears Redux + localStorage
@@ -304,6 +325,39 @@ const Profile = () => {
         >
           Sign Out of IMS Core
         </button>
+
+        <hr style={{ border: 'none', borderTop: '1px solid rgba(239,68,68,0.2)', margin: '20px 0' }} />
+        
+        <p style={{ color: 'var(--text-muted)', fontSize: '0.88rem', marginBottom: '16px' }}>
+          Deleting your account is permanent. Please enter your password to confirm.
+        </p>
+        
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', maxWidth: '300px' }}>
+          <input
+            type="password"
+            className="form-input"
+            placeholder="Current Password"
+            value={deletePassword}
+            onChange={(e) => setDeletePassword(e.target.value)}
+          />
+          {deleteMessage && (
+            <div style={{
+              padding: '10px 14px', borderRadius: '10px', fontSize: '0.85rem', fontWeight: 600,
+              background: deleteMessage.type === 'error' ? 'var(--color-danger-dim)' : 'var(--color-success-dim)',
+              color: deleteMessage.type === 'error' ? 'var(--color-danger)' : 'var(--color-success)',
+              border: `1px solid ${deleteMessage.type === 'error' ? 'rgba(239,68,68,0.2)' : 'rgba(16,185,129,0.2)'}`
+            }}>
+              {deleteMessage.text}
+            </div>
+          )}
+          <button
+            className="btn"
+            style={{ background: 'var(--color-danger)', color: '#fff', border: 'none', alignSelf: 'flex-start' }}
+            onClick={handleDeleteAccount}
+          >
+            Delete Account
+          </button>
+        </div>
       </div>
     </div>
   );

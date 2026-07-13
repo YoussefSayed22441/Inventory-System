@@ -61,8 +61,7 @@ const productService = {
   /** GET /api/product/low-stock */
   getLowStock: async (params = {}) => {
     const res = await api.get('/product/low-stock', { params });
-    const rows = res.data?.data?.data ?? res.data?.data ?? [];
-    return Array.isArray(rows) ? rows.map(normalize) : [];
+    return unwrapList(res.data).items;
   },
 
   /** GET /api/product/:id */

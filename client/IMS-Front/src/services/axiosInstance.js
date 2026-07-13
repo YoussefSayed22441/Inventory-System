@@ -60,8 +60,10 @@ api.interceptors.response.use(
           accessToken: localStorage.getItem('token'),
           refreshToken,
         });
-        const newToken = data.data?.jWTAuth?.accessToken;
-        const newRefresh = data.data?.jWTAuth?.refreshToken;
+        // RefreshToken endpoint returns Result<JWTAuthResult> — a flat object,
+        // NOT the UserDto shape used by Login/Register (which has a jWTAuth wrapper).
+        const newToken   = data.data?.accessToken;
+        const newRefresh = data.data?.refreshToken?.tokenString;
         if (!newToken) throw new Error('No token in refresh response');
         localStorage.setItem('token', newToken);
         if (newRefresh) localStorage.setItem('refreshToken', newRefresh);
