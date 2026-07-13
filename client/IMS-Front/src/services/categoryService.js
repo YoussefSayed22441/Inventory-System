@@ -20,20 +20,20 @@ const unwrapList = (resData) => {
 /* ── Service ─────────────────────────────────────────────────────────────── */
 const categoryService = {
   /** GET /api/category */
-  getAll: async (params = {}) => {
-    const res = await api.get('/category', { params });
+  getAll: async (params = {"pageSize": 10}) => {
+    const res = await api.get('/Category', { params });
     return unwrapList(res.data);
   },
 
   /** GET /api/category/:id */
   getById: async (id) => {
-    const res = await api.get(`/category/${id}`);
+    const res = await api.get(`/Category/${id}`);
     return normalize(res.data.data);
   },
 
   /** POST /api/category */
   create: async (cat) => {
-    const res = await api.post('/category', {
+    const res = await api.post('/Category', {
       categoryName: cat.name,
       description:  cat.description || '',
     });
@@ -42,7 +42,7 @@ const categoryService = {
 
   /** PUT /api/category */
   update: async (cat) => {
-    const res = await api.put('/category', {
+    const res = await api.put('/Category', {
       id:           cat.id,
       categoryName: cat.name,
       description:  cat.description || '',
@@ -52,7 +52,7 @@ const categoryService = {
 
   /** DELETE /api/category/:id */
   delete: async (id) => {
-    await api.delete(`/category/${id}`);
+    await api.delete(`/Category/${id}`);
     return id;
   },
 };

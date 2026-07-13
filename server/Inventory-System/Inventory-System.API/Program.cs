@@ -48,16 +48,16 @@ namespace Inventory_System.API
                 });
             });
             //CORS
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy("AllowFrontend", policy =>
-    {
-        policy.WithOrigins("http://localhost:5173")
-              .AllowAnyHeader()
-              .AllowAnyMethod()
-              .AllowCredentials(); // only if you're using cookies/auth
-    });
-});
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy("AllowFrontend", policy =>
+                {
+                    policy.WithOrigins("http://localhost:5173", "https://localhost:5173")
+                          .AllowAnyHeader()
+                          .AllowAnyMethod()
+                          .AllowCredentials(); // only if you send cookies/auth headers that need credentials mode
+                });
+            });
 
             // ✅ Dependency Injections
             builder.Services.AddInfrastructureDependencies(builder.Configuration)
@@ -94,10 +94,10 @@ builder.Services.AddCors(options =>
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
+            app.UseCors("AllowFrontend");
 
             app.UseHttpsRedirection();
 
-            app.UseCors("AllowFrontend");
             app.UseAuthentication();
             app.UseAuthorization();
             app.MapControllers();

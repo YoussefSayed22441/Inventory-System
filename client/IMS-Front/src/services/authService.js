@@ -1,7 +1,7 @@
 import axios from 'axios';
 import api from './axiosInstance';
 
-const BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5280/api';
+const BASE_URL = 'https://localhost:7125/api/Auth';
 
 /* ── Normalizer: backend UserDto → frontend user shape ───────────────────── */
 const normalizeUser = (dto) => ({
@@ -16,7 +16,7 @@ const normalizeUser = (dto) => ({
 const authService = {
   /** POST /api/auth/Login  — { email, password } */
   login: async ({ email, password }) => {
-    const res = await axios.post(`${BASE_URL}/auth/Login`, { email, password });
+    const res = await axios.post(`${BASE_URL}/Login`, { email, password });
     const dto = res.data?.data;
     return normalizeUser(dto);
   },
@@ -26,7 +26,7 @@ const authService = {
    * Backend expects: DisplayName, UserName, Email, PhoneNumber, Password, ConfirmPassword
    */
   register: async ({ name, username, email, phone, password, confirmPassword }) => {
-    const res = await axios.post(`${BASE_URL}/auth/Register`, {
+    const res = await axios.post(`${BASE_URL}/Register`, {
       displayName:     name,
       userName:        username || email.split('@')[0],
       email,
@@ -42,7 +42,7 @@ const authService = {
   logout: async () => {
     try {
       const refreshToken = localStorage.getItem('refreshToken');
-      await api.post('/auth/Logout', { refreshToken });
+      await api.post(`${BASE_URL}/Logout`, { refreshToken });
     } catch (_) {
       // silently ignore — clear local storage regardless
     }
@@ -55,20 +55,20 @@ const authService = {
   refreshToken: async () => {
     const accessToken  = localStorage.getItem('token');
     const refreshToken = localStorage.getItem('refreshToken');
-    const res = await axios.post(`${BASE_URL}/auth/RefreshToken`, { accessToken, refreshToken });
+    const res = await axios.post(`${BASE_URL}/RefreshToken`, { accessToken, refreshToken });
     const dto = res.data?.data;
     return normalizeUser(dto);
   },
 
   /** PUT /api/auth/Profile — update own account */
   updateProfile: async (data) => {
-    const res = await api.put('/auth/Profile', data);
+    const res = await api.put(`${BASE_URL}/Profile`, data);
     return res.data?.data;
   },
 
   /** DELETE /api/auth/Profile — delete own account */
   deleteAccount: async () => {
-    await api.delete('/auth/Profile');
+    await api.delete(`${BASE_URL}/Profile`);
   },
 
   getCurrentUser: () => {
