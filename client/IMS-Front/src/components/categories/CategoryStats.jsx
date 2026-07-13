@@ -71,7 +71,7 @@ const CategoryStats = () => {
   }, [categoryStats]);
 
   // 4. Inactive Categories Count
-  const inactiveCount = categories.filter(c => c.status?.toLowerCase() === 'inactive').length;
+  // const inactiveCount = categories.filter(c => c.status?.toLowerCase() === 'inactive').length;
 
   return (
     <div className="category-stats-grid">
@@ -111,6 +111,7 @@ const CategoryStats = () => {
       />
 
       {/* Inactive count warnings */}
+      {/*
       <StatCard
         icon={AlertTriangle}
         title="Inactive Categories"
@@ -122,6 +123,7 @@ const CategoryStats = () => {
         }}
         glowVariant={inactiveCount > 0 ? 'orange' : 'blue'}
       />
+      */}
     </div>
   );
 };

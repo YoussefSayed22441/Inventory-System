@@ -46,8 +46,8 @@ const SupplierCardsGrid = ({ onCardClick, onEditClick }) => {
       const query = searchQuery.toLowerCase();
       return (
         sup.name.toLowerCase().includes(query) ||
-        sup.code.toLowerCase().includes(query) ||
-        sup.contactPerson.toLowerCase().includes(query) ||
+        // sup.code.toLowerCase().includes(query) ||
+        // sup.contactPerson.toLowerCase().includes(query) ||
         sup.email.toLowerCase().includes(query)
       );
     });
@@ -63,10 +63,14 @@ const SupplierCardsGrid = ({ onCardClick, onEditClick }) => {
       if (sortBy === 'name') {
         fieldA = a.name.toLowerCase();
         fieldB = b.name.toLowerCase();
-      } else if (sortBy === 'rating') {
+      }
+      /*
+      else if (sortBy === 'rating') {
         fieldA = a.rating || 0;
         fieldB = b.rating || 0;
-      } else if (sortBy === 'value') {
+      }
+      */
+      else if (sortBy === 'value') {
         fieldA = supplierMetrics[a.id]?.value || 0;
         fieldB = supplierMetrics[b.id]?.value || 0;
       } else {
@@ -122,6 +126,7 @@ const SupplierCardsGrid = ({ onCardClick, onEditClick }) => {
             Name {sortBy === 'name' && (sortOrder === 'asc' ? '↑' : '↓')}
           </button>
           
+          {/*
           <button 
             className={`btn btn-secondary ${sortBy === 'rating' ? 'active' : ''}`}
             style={{ padding: '8px 16px', fontSize: '0.85rem', display: 'flex', alignItems: 'center', gap: '6px' }}
@@ -129,6 +134,7 @@ const SupplierCardsGrid = ({ onCardClick, onEditClick }) => {
           >
             Rating {sortBy === 'rating' && (sortOrder === 'asc' ? '↑' : '↓')}
           </button>
+          */}
 
           <button 
             className={`btn btn-secondary ${sortBy === 'value' ? 'active' : ''}`}

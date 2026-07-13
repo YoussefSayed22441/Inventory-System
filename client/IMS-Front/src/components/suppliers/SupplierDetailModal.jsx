@@ -1,12 +1,13 @@
 import React from 'react';
-import { Mail, Phone, Calendar, ShoppingBag, ShieldAlert, Star, Layers, DollarSign } from 'lucide-react';
+import { Mail, Phone, Calendar, ShoppingBag, ShieldAlert, Star, Layers, DollarSign, MapPin } from 'lucide-react';
 import GlassModal from '../ui/GlassModal';
 
 const SupplierDetailModal = ({ isOpen, onClose, supplier, metrics }) => {
   if (!supplier) return null;
 
-  const isInactive = supplier.status?.toLowerCase() === 'inactive';
+  // const isInactive = supplier.status?.toLowerCase() === 'inactive';
 
+  /*
   const renderStars = (rating) => {
     const stars = [];
     const floorRating = Math.floor(rating);
@@ -21,6 +22,7 @@ const SupplierDetailModal = ({ isOpen, onClose, supplier, metrics }) => {
     }
     return <div className="rating-container">{stars}</div>;
   };
+  */
 
   return (
     <GlassModal
@@ -31,9 +33,11 @@ const SupplierDetailModal = ({ isOpen, onClose, supplier, metrics }) => {
       <div className="supplier-profile-detail">
         {/* Cover Photo */}
         <div className="detail-cover-banner">
+          {/*
           <span className={`badge ${isInactive ? 'badge-inactive' : 'badge-active'}`} style={{ position: 'absolute', top: '16px', right: '16px' }}>
             {supplier.status}
           </span>
+          */}
         </div>
 
         {/* Profile Header section */}
@@ -44,8 +48,9 @@ const SupplierDetailModal = ({ isOpen, onClose, supplier, metrics }) => {
           <div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
               <h2 className="supplier-title-text" style={{ fontSize: '1.4rem', margin: '0' }}>{supplier.name}</h2>
-              <span className="code-badge" style={{ fontSize: '0.8rem' }}>{supplier.code}</span>
+              {/* <span className="code-badge" style={{ fontSize: '0.8rem' }}>{supplier.code}</span> */}
             </div>
+            {/*
             <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', margin: '4px 0' }}>
               Primary Contact: <strong>{supplier.contactPerson}</strong>
             </p>
@@ -55,6 +60,7 @@ const SupplierDetailModal = ({ isOpen, onClose, supplier, metrics }) => {
                 {supplier.rating?.toFixed(1)} / 5.0 Rating
               </span>
             </div>
+            */}
           </div>
         </div>
 
@@ -62,6 +68,7 @@ const SupplierDetailModal = ({ isOpen, onClose, supplier, metrics }) => {
         <div className="detail-profile-body" style={{ display: 'flex', flexDirection: 'column', gap: '24px', padding: '0 24px 24px 24px' }}>
           
           {/* Business Summary */}
+          {/*
           <div>
             <h4 style={{ color: 'var(--text-pure-white)', marginBottom: '8px', borderBottom: '1px solid rgba(255,255,255,0.05)', paddingBottom: '6px' }}>
               Business Overview
@@ -70,6 +77,7 @@ const SupplierDetailModal = ({ isOpen, onClose, supplier, metrics }) => {
               {supplier.description}
             </p>
           </div>
+          */}
 
           {/* Contact Details Panel */}
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '16px' }}>
@@ -92,6 +100,17 @@ const SupplierDetailModal = ({ isOpen, onClose, supplier, metrics }) => {
                 <a href={`tel:${supplier.phone}`} style={{ fontSize: '0.88rem', color: 'var(--text-pure-white)' }}>
                   {supplier.phone}
                 </a>
+              </div>
+            </div>
+
+            {/* Address card */}
+            <div className="glass-card" style={{ padding: '16px', display: 'flex', alignItems: 'center', gap: '12px', gridColumn: '1 / -1' }}>
+              <MapPin size={18} color="var(--color-success)" />
+              <div style={{ display: 'flex', flexDirection: 'column' }}>
+                <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>Registered Address</span>
+                <span style={{ fontSize: '0.88rem', color: 'var(--text-pure-white)' }}>
+                  {supplier.address || '—'}
+                </span>
               </div>
             </div>
           </div>

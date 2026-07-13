@@ -54,7 +54,7 @@ const Transfers = () => {
   }, [dispatch]);
 
   /* ── Local UI state ── */
-  const [activeTab, setActiveTab] = useState('transfers'); // 'transfers' | 'history' | 'stock'
+  const [activeTab, setActiveTab] = useState('stock'); // 'stock' only now
   const [isAddOpen, setIsAddOpen] = useState(false);
   const [detailTransfer, setDetailTransfer] = useState(null);
   const [formData, setFormData] = useState(EMPTY_FORM);
@@ -95,7 +95,7 @@ const Transfers = () => {
       return;
     }
     // Record as local transfer UI entry
-    dispatch(addTransfer({ ...formData, quantity: Number(formData.quantity) }));
+    // dispatch(addTransfer({ ...formData, quantity: Number(formData.quantity) }));
     // Also record as real StockHistory OUT entry (moving stock between hubs)
     const product = inventoryItems.find((i) => i.name === formData.product);
     if (product) {
@@ -140,8 +140,8 @@ const Transfers = () => {
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '16px' }}>
         <div className="transfers-tabs">
           {[
-            { key: 'transfers', icon: <ArrowLeftRight size={15} />, label: 'Transfer Log' },
-            { key: 'history',   icon: <FileText size={15} />,       label: 'Product History' },
+            // { key: 'transfers', icon: <ArrowLeftRight size={15} />, label: 'Transfer Log' },
+            // { key: 'history',   icon: <FileText size={15} />,       label: 'Product History' },
             { key: 'stock',     icon: <Database size={15} />,       label: 'Stock Movements' },
           ].map((tab) => (
             <button
@@ -184,6 +184,7 @@ const Transfers = () => {
       </div>
 
       {/* ── TRANSFER LOG TAB ── */}
+      {/*
       {activeTab === 'transfers' && (
         <div className="glass-panel" style={{ padding: 0 }}>
           <div className="transfers-table-wrap">
@@ -269,8 +270,10 @@ const Transfers = () => {
           </div>
         </div>
       )}
+      */}
 
       {/* ── PRODUCT HISTORY TAB ── */}
+      {/*
       {activeTab === 'history' && (
         <div className="glass-panel">
           <div style={{ marginBottom: '20px' }}>
@@ -324,6 +327,7 @@ const Transfers = () => {
           </div>
         </div>
       )}
+      */}
 
       {/* ── STOCK MOVEMENTS TAB (real API data) ── */}
       {activeTab === 'stock' && (

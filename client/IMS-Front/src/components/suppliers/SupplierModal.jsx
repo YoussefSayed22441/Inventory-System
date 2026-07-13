@@ -8,35 +8,38 @@ const SupplierModal = ({ isOpen, onClose, supplierToEdit }) => {
 
   // Local form states
   const [name, setName] = useState('');
-  const [code, setCode] = useState('');
-  const [contactPerson, setContactPerson] = useState('');
+  // const [code, setCode] = useState('');
+  // const [contactPerson, setContactPerson] = useState('');
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
-  const [rating, setRating] = useState(4.5);
-  const [status, setStatus] = useState('Active');
-  const [description, setDescription] = useState('');
+  const [address, setAddress] = useState('');
+  // const [rating, setRating] = useState(4.5);
+  // const [status, setStatus] = useState('Active');
+  // const [description, setDescription] = useState('');
   const [errors, setErrors] = useState({});
 
   // Sync state with edit target prop
   useEffect(() => {
     if (supplierToEdit) {
       setName(supplierToEdit.name || '');
-      setCode(supplierToEdit.code || '');
-      setContactPerson(supplierToEdit.contactPerson || '');
+      // setCode(supplierToEdit.code || '');
+      // setContactPerson(supplierToEdit.contactPerson || '');
       setEmail(supplierToEdit.email || '');
       setPhone(supplierToEdit.phone || '');
-      setRating(supplierToEdit.rating || 4.5);
-      setStatus(supplierToEdit.status || 'Active');
-      setDescription(supplierToEdit.description || '');
+      setAddress(supplierToEdit.address || '');
+      // setRating(supplierToEdit.rating || 4.5);
+      // setStatus(supplierToEdit.status || 'Active');
+      // setDescription(supplierToEdit.description || '');
     } else {
       setName('');
-      setCode('');
-      setContactPerson('');
+      // setCode('');
+      // setContactPerson('');
       setEmail('');
       setPhone('');
-      setRating(4.5);
-      setStatus('Active');
-      setDescription('');
+      setAddress('');
+      // setRating(4.5);
+      // setStatus('Active');
+      // setDescription('');
     }
     setErrors({});
   }, [supplierToEdit, isOpen]);
@@ -44,20 +47,25 @@ const SupplierModal = ({ isOpen, onClose, supplierToEdit }) => {
   const validateForm = () => {
     const tempErrors = {};
     if (!name.trim()) tempErrors.name = 'Supplier name is required';
+    /*
     if (!code.trim()) tempErrors.code = 'Supplier code is required';
     else if (!/^[A-Z0-9_-]{3,10}$/i.test(code.trim())) {
       tempErrors.code = 'Code must be 3-10 alphanumeric characters';
     }
     if (!contactPerson.trim()) tempErrors.contactPerson = 'Contact person is required';
+    */
     if (!email.trim()) tempErrors.email = 'Contact email is required';
     else if (!/\S+@\S+\.\S+/.test(email.trim())) {
       tempErrors.email = 'Please specify a valid email address';
     }
     if (!phone.trim()) tempErrors.phone = 'Phone number is required';
+    if (!address.trim()) tempErrors.address = 'Address is required';
+    /*
     if (rating < 1.0 || rating > 5.0) {
       tempErrors.rating = 'Rating must be between 1.0 and 5.0';
     }
     if (!description.trim()) tempErrors.description = 'Vendor summary is required';
+    */
 
     setErrors(tempErrors);
     return Object.keys(tempErrors).length === 0;
@@ -69,13 +77,14 @@ const SupplierModal = ({ isOpen, onClose, supplierToEdit }) => {
 
     const supplierData = {
       name: name.trim(),
-      code: code.trim().toUpperCase(),
-      contactPerson: contactPerson.trim(),
+      // code: code.trim().toUpperCase(),
+      // contactPerson: contactPerson.trim(),
       email: email.trim(),
       phone: phone.trim(),
-      rating: parseFloat(rating),
-      status,
-      description: description.trim(),
+      address: address.trim(),
+      // rating: parseFloat(rating),
+      // status,
+      // description: description.trim(),
     };
 
     if (supplierToEdit) {
@@ -112,6 +121,7 @@ const SupplierModal = ({ isOpen, onClose, supplierToEdit }) => {
           </div>
 
           {/* Supplier Code */}
+          {/*
           <div className="form-group">
             <label className="form-label">Supplier Code</label>
             <input
@@ -124,8 +134,10 @@ const SupplierModal = ({ isOpen, onClose, supplierToEdit }) => {
             />
             {errors.code && <span className="form-error-msg">{errors.code}</span>}
           </div>
+          */}
 
           {/* Contact Person */}
+          {/*
           <div className="form-group">
             <label className="form-label">Contact Person</label>
             <input
@@ -137,6 +149,7 @@ const SupplierModal = ({ isOpen, onClose, supplierToEdit }) => {
             />
             {errors.contactPerson && <span className="form-error-msg">{errors.contactPerson}</span>}
           </div>
+          */}
 
           {/* Contact Email */}
           <div className="form-group">
@@ -164,7 +177,21 @@ const SupplierModal = ({ isOpen, onClose, supplierToEdit }) => {
             {errors.phone && <span className="form-error-msg">{errors.phone}</span>}
           </div>
 
+          {/* Supplier Address */}
+          <div className="form-group">
+            <label className="form-label">Address</label>
+            <input
+              type="text"
+              placeholder="e.g. 123 Tech Avenue"
+              className={`form-input ${errors.address ? 'error' : ''}`}
+              value={address}
+              onChange={(e) => setAddress(e.target.value)}
+            />
+            {errors.address && <span className="form-error-msg">{errors.address}</span>}
+          </div>
+
           {/* Rating */}
+          {/*
           <div className="form-group">
             <label className="form-label">Performance Rating (1.0 - 5.0)</label>
             <input
@@ -179,8 +206,10 @@ const SupplierModal = ({ isOpen, onClose, supplierToEdit }) => {
             />
             {errors.rating && <span className="form-error-msg">{errors.rating}</span>}
           </div>
+          */}
 
           {/* Status Selection */}
+          {/*
           <div className="form-group">
             <label className="form-label">Operational Status</label>
             <select
@@ -192,9 +221,11 @@ const SupplierModal = ({ isOpen, onClose, supplierToEdit }) => {
               <option value="Inactive">Inactive</option>
             </select>
           </div>
+          */}
         </div>
 
         {/* Vendor Summary Description */}
+        {/*
         <div className="form-group" style={{ marginTop: '20px' }}>
           <label className="form-label">Vendor Summary / Notes</label>
           <textarea
@@ -206,6 +237,7 @@ const SupplierModal = ({ isOpen, onClose, supplierToEdit }) => {
           />
           {errors.description && <span className="form-error-msg">{errors.description}</span>}
         </div>
+        */}
 
         {/* Actions Button */}
         <div className="modal-actions" style={{ marginTop: '28px', display: 'flex', justifyContent: 'flex-end', gap: '16px' }}>

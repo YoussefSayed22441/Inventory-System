@@ -10,11 +10,17 @@ const ItemModal = ({ isOpen, onClose, itemToEdit }) => {
   const [formData, setFormData] = useState({
     name: '',
     sku: '',
+    barcode: '',
+    description: '',
     category: 'Electronics',
     supplier: 'Apex Tech',
     warehouse: 'North Hub',
     quantity: 0,
     unitPrice: 0.0,
+    costPrice: 0.0,
+    reorderLevel: 0,
+    minStockLevel: 0,
+    unit: 'pcs',
   });
 
   const [formErrors, setFormErrors] = useState({});
@@ -26,21 +32,33 @@ const ItemModal = ({ isOpen, onClose, itemToEdit }) => {
         id: itemToEdit.id,
         name: itemToEdit.name,
         sku: itemToEdit.sku,
+        barcode: itemToEdit.barcode || '',
+        description: itemToEdit.description || '',
         category: itemToEdit.category,
         supplier: itemToEdit.supplier,
         warehouse: itemToEdit.warehouse,
         quantity: itemToEdit.quantity,
         unitPrice: itemToEdit.unitPrice,
+        costPrice: itemToEdit.costPrice || 0,
+        reorderLevel: itemToEdit.reorderLevel || 0,
+        minStockLevel: itemToEdit.minStockLevel || 0,
+        unit: itemToEdit.unit || 'pcs',
       });
     } else {
       setFormData({
         name: '',
         sku: '',
+        barcode: '',
+        description: '',
         category: 'Electronics',
         supplier: 'Apex Tech',
         warehouse: 'North Hub',
         quantity: 0,
         unitPrice: 0.0,
+        costPrice: 0.0,
+        reorderLevel: 0,
+        minStockLevel: 0,
+        unit: 'pcs',
       });
     }
     setFormErrors({});
@@ -65,7 +83,10 @@ const ItemModal = ({ isOpen, onClose, itemToEdit }) => {
     if (!formData.name.trim()) errors.name = 'Product name is required';
     if (!formData.sku.trim()) errors.sku = 'SKU identifier code is required';
     if (formData.quantity < 0) errors.quantity = 'Quantity cannot be negative';
-    if (formData.unitPrice < 0) errors.unitPrice = 'Price cannot be negative';
+    if (formData.unitPrice < 0) errors.unitPrice = 'Selling price cannot be negative';
+    if (formData.costPrice < 0) errors.costPrice = 'Cost price cannot be negative';
+    if (formData.reorderLevel < 0) errors.reorderLevel = 'Cannot be negative';
+    if (formData.minStockLevel < 0) errors.minStockLevel = 'Cannot be negative';
     return errors;
   };
 
@@ -125,6 +146,31 @@ const ItemModal = ({ isOpen, onClose, itemToEdit }) => {
             {formErrors.sku && (
               <span style={{ color: 'var(--color-danger)', fontSize: '0.75rem' }}>{formErrors.sku}</span>
             )}
+          </div>
+
+          <div className="form-group">
+            <label className="form-label">Barcode (Optional)</label>
+            <input 
+              type="text" 
+              className="form-input" 
+              placeholder="e.g. 123456789012"
+              value={formData.barcode}
+              onChange={(e) => handleInputChange('barcode', e.target.value)}
+            />
+          </div>
+        </div>
+
+        {/* Description */}
+        <div className="modal-form-grid">
+          <div className="form-group" style={{ gridColumn: 'span 2' }}>
+            <label className="form-label">Description</label>
+            <textarea
+              className="form-input" 
+              placeholder="Product details..."
+              value={formData.description}
+              onChange={(e) => handleInputChange('description', e.target.value)}
+              rows="2"
+            />
           </div>
         </div>
 
@@ -205,6 +251,66 @@ const ItemModal = ({ isOpen, onClose, itemToEdit }) => {
             {formErrors.unitPrice && (
               <span style={{ color: 'var(--color-danger)', fontSize: '0.75rem' }}>{formErrors.unitPrice}</span>
             )}
+          </div>
+
+          <div className="form-group">
+            <label className="form-label">Cost Price ($) *</label>
+            <input 
+              type="number" 
+              min="0"
+              step="0.01"
+              className="form-input" 
+              placeholder="e.g. 10.00"
+              value={formData.costPrice}
+              onChange={(e) => handleInputChange('costPrice', parseFloat(e.target.value) || 0.0)}
+            />
+            {formErrors.costPrice && (
+              <span style={{ color: 'var(--color-danger)', fontSize: '0.75rem' }}>{formErrors.costPrice}</span>
+            )}
+          </div>
+        </div>
+
+        {/* Reorder and Min Stock */}
+        <div className="modal-form-grid">
+          <div className="form-group">
+            <label className="form-label">Reorder Level</label>
+            <input 
+              type="number" 
+              min="0"
+              className="form-input" 
+              placeholder="e.g. 20"
+              value={formData.reorderLevel}
+              onChange={(e) => handleInputChange('reorderLevel', parseInt(e.target.value) || 0)}
+            />
+            {formErrors.reorderLevel && (
+              <span style={{ color: 'var(--color-danger)', fontSize: '0.75rem' }}>{formErrors.reorderLevel}</span>
+            )}
+          </div>
+
+          <div className="form-group">
+            <label className="form-label">Min Stock Level</label>
+            <input 
+              type="number" 
+              min="0"
+              className="form-input" 
+              placeholder="e.g. 10"
+              value={formData.minStockLevel}
+              onChange={(e) => handleInputChange('minStockLevel', parseInt(e.target.value) || 0)}
+            />
+            {formErrors.minStockLevel && (
+              <span style={{ color: 'var(--color-danger)', fontSize: '0.75rem' }}>{formErrors.minStockLevel}</span>
+            )}
+          </div>
+
+          <div className="form-group" style={{ gridColumn: 'span 2' }}>
+            <label className="form-label">Unit of Measurement</label>
+            <input 
+              type="text" 
+              className="form-input" 
+              placeholder="e.g. pcs, kg, box"
+              value={formData.unit}
+              onChange={(e) => handleInputChange('unit', e.target.value)}
+            />
           </div>
         </div>
 

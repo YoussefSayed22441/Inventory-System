@@ -8,8 +8,8 @@ const CategoryModal = ({ isOpen, onClose, categoryToEdit }) => {
 
   // Local Form state
   const [name, setName] = useState('');
-  const [code, setCode] = useState('');
-  const [status, setStatus] = useState('Active');
+  // const [code, setCode] = useState('');
+  // const [status, setStatus] = useState('Active');
   const [description, setDescription] = useState('');
   const [errors, setErrors] = useState({});
 
@@ -17,13 +17,13 @@ const CategoryModal = ({ isOpen, onClose, categoryToEdit }) => {
   useEffect(() => {
     if (categoryToEdit) {
       setName(categoryToEdit.name || '');
-      setCode(categoryToEdit.code || '');
-      setStatus(categoryToEdit.status || 'Active');
+      // setCode(categoryToEdit.code || '');
+      // setStatus(categoryToEdit.status || 'Active');
       setDescription(categoryToEdit.description || '');
     } else {
       setName('');
-      setCode('');
-      setStatus('Active');
+      // setCode('');
+      // setStatus('Active');
       setDescription('');
     }
     setErrors({});
@@ -32,10 +32,12 @@ const CategoryModal = ({ isOpen, onClose, categoryToEdit }) => {
   const validateForm = () => {
     const tempErrors = {};
     if (!name.trim()) tempErrors.name = 'Category name is required';
+    /*
     if (!code.trim()) tempErrors.code = 'Category code is required';
     else if (!/^[A-Z0-9_-]{3,10}$/i.test(code.trim())) {
       tempErrors.code = 'Code must be 3-10 alphanumeric characters';
     }
+    */
     if (!description.trim()) tempErrors.description = 'Description is required';
     
     setErrors(tempErrors);
@@ -48,8 +50,8 @@ const CategoryModal = ({ isOpen, onClose, categoryToEdit }) => {
 
     const categoryData = {
       name: name.trim(),
-      code: code.trim().toUpperCase(),
-      status,
+      // code: code.trim().toUpperCase(),
+      // status,
       description: description.trim(),
     };
 
@@ -87,6 +89,7 @@ const CategoryModal = ({ isOpen, onClose, categoryToEdit }) => {
           </div>
 
           {/* Category Code */}
+          {/*
           <div className="form-group">
             <label className="form-label">Category Code</label>
             <input
@@ -99,8 +102,10 @@ const CategoryModal = ({ isOpen, onClose, categoryToEdit }) => {
             />
             {errors.code && <span className="form-error-msg">{errors.code}</span>}
           </div>
+          */}
 
           {/* Status Selection */}
+          {/*
           <div className="form-group">
             <label className="form-label">Operational Status</label>
             <select
@@ -112,6 +117,7 @@ const CategoryModal = ({ isOpen, onClose, categoryToEdit }) => {
               <option value="Inactive">Inactive</option>
             </select>
           </div>
+          */}
         </div>
 
         {/* Category Description */}

@@ -3,6 +3,7 @@ import './App.css';
 import { Routes, Route, useLocation, useNavigate } from "react-router-dom";
 
 import BoxIntroAnimation from './components/ui/BoxIntroAnimation';
+import ProtectedRoute from "./components/auth/ProtectedRoute"
 
 import Navbar from './layouts/Navbar';
 import Sidebar from './layouts/Sidebar';
@@ -14,15 +15,15 @@ import Login from './pages/Login';
 import Inventory from "./pages/Inventory";
 import Categories from "./pages/Categories";
 import Suppliers from "./pages/Suppliers";
-import PurchaseOrders from "./pages/PurchaseOrders";
-import SalesOrders from "./pages/SalesOrders";
-import Warehouses from "./pages/Warehouses";
+// import PurchaseOrders from "./pages/PurchaseOrders";
+// import SalesOrders from "./pages/SalesOrders";
+// import Warehouses from "./pages/Warehouses";
 import Transfers from "./pages/Transfers";
-import Reports from "./pages/Reports";
-import Users from "./pages/Users";
-import Settings from "./pages/Settings";
-import Finance from "./pages/Finance";
-import Pos from "./pages/Pos";
+// import Reports from "./pages/Reports";
+// import Users from "./pages/Users";
+// import Settings from "./pages/Settings";
+// import Finance from "./pages/Finance";
+// import Pos from "./pages/Pos";
 import Profile from "./pages/Profile";
 
 function App() {
@@ -72,20 +73,22 @@ function App() {
         )}
         <main className="page-body">
           <Routes>
-            <Route path='/' element={<Home />} />
             <Route path="/login" element={<Login />} />
+            <Route path='/' element={<ProtectedRoute><Home /></ProtectedRoute>} />
             <Route path="/inventory" element={<Inventory />} />
             <Route path="/categories" element={<Categories />} />
             <Route path="/suppliers" element={<Suppliers />} />
+            <Route path="/transfers" element={<Transfers />} />
+            {/* Orphaned/Mock Features Commented Out:
             <Route path="/purchase-orders" element={<PurchaseOrders />} />
             <Route path="/sales-orders" element={<SalesOrders />} />
             <Route path="/warehouses" element={<Warehouses />} />
-            <Route path="/transfers" element={<Transfers />} />
             <Route path="/reports" element={<Reports />} />
             <Route path="/users" element={<Users />} />
             <Route path="/settings" element={<Settings />} />
             <Route path="/finance" element={<Finance />} />
             <Route path="/pos" element={<Pos />} />
+            */}
             <Route path="/profile" element={<Profile />} />
             <Route path="*" element={<NotFound />} />
           </Routes>

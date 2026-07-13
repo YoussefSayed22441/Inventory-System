@@ -8,12 +8,14 @@ const normalize = (s) => ({
   phone:         s.phone   || '',
   address:       s.address || '',
   // Backend Supplier has no code / contactPerson / rating / description
-  // Keep UI-only defaults so existing components don't break
+  // Commenting out mock UI-only defaults as requested
+  /*
   code:          s.code          || `SUP-${s.name?.slice(0, 3).toUpperCase()}`,
   contactPerson: s.contactPerson || '',
   rating:        s.rating        ?? 4.5,
   status:        s.status        || 'Active',
   description:   s.description  || '',
+  */
   createdAt:     s.createdAt,
   lastUpdated:   s.updatedAt || s.createdAt,
 });
@@ -46,8 +48,8 @@ const supplierService = {
       phone:   sup.phone   || '',
       address: sup.address || '',
     });
-    // Merge UI-only fields back so components don't lose them
-    return { ...normalize(res.data.data), ...sup, id: res.data.data.id };
+    // Remove UI-only fields merge back
+    return { ...normalize(res.data.data), id: res.data.data.id };
   },
 
   /** PUT /api/supplier */
@@ -59,7 +61,7 @@ const supplierService = {
       phone:   sup.phone   || '',
       address: sup.address || '',
     });
-    return { ...normalize(res.data.data), ...sup, id: res.data.data.id };
+    return { ...normalize(res.data.data), id: res.data.data.id };
   },
 
   /** DELETE /api/supplier/:id */

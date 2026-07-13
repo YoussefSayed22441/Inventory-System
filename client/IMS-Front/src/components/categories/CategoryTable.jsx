@@ -60,13 +60,17 @@ const CategoryTable = ({ onEditClick }) => {
       if (sortBy === 'name') {
         fieldA = a.name.toLowerCase();
         fieldB = b.name.toLowerCase();
-      } else if (sortBy === 'code') {
+      }
+      /*
+      else if (sortBy === 'code') {
         fieldA = a.code.toLowerCase();
         fieldB = b.code.toLowerCase();
       } else if (sortBy === 'status') {
         fieldA = a.status.toLowerCase();
         fieldB = b.status.toLowerCase();
-      } else if (sortBy === 'skus') {
+      }
+      */
+      else if (sortBy === 'skus') {
         fieldA = categoryMetrics[a.id]?.skus || 0;
         fieldB = categoryMetrics[b.id]?.skus || 0;
       } else if (sortBy === 'units') {
@@ -124,15 +128,19 @@ const CategoryTable = ({ onEditClick }) => {
         <table className="categories-table">
           <thead>
             <tr>
+              {/*
               <th className="sortable" onClick={() => handleSort('code')}>
                 Code {renderSortIndicator('code')}
               </th>
+              */}
               <th className="sortable" onClick={() => handleSort('name')}>
                 Category {renderSortIndicator('name')}
               </th>
+              {/*
               <th className="sortable" onClick={() => handleSort('status')}>
                 Status {renderSortIndicator('status')}
               </th>
+              */}
               <th className="sortable" style={{ textAlign: 'right' }} onClick={() => handleSort('skus')}>
                 Unique SKUs {renderSortIndicator('skus')}
               </th>
@@ -149,13 +157,15 @@ const CategoryTable = ({ onEditClick }) => {
             {paginatedCategories.length > 0 ? (
               paginatedCategories.map((cat) => {
                 const metrics = categoryMetrics[cat.id] || { skus: 0, units: 0, value: 0 };
-                const isInactive = cat.status?.toLowerCase() === 'inactive';
+                // const isInactive = cat.status?.toLowerCase() === 'inactive';
                 
                 return (
                   <tr key={cat.id}>
+                    {/*
                     <td>
                       <span className="code-badge">{cat.code}</span>
                     </td>
+                    */}
                     <td>
                       <div className="category-name-cell">
                         <span className="category-title-text">{cat.name}</span>
@@ -164,11 +174,13 @@ const CategoryTable = ({ onEditClick }) => {
                         </span>
                       </div>
                     </td>
+                    {/*
                     <td>
                       <span className={`badge ${isInactive ? 'badge-inactive' : 'badge-active'}`}>
                         {cat.status}
                       </span>
                     </td>
+                    */}
                     <td style={{ textAlign: 'right', fontWeight: '600' }}>
                       {metrics.skus}
                     </td>

@@ -5,8 +5,8 @@ const normalize = (c) => ({
   id:          c.id,
   name:        c.categoryName,
   description: c.description || '',
-  status:      'Active',              // backend Category has no status field
-  code:        `CAT-${c.categoryName?.slice(0, 3).toUpperCase()}`,
+  // status:      'Active',              // backend Category has no status field
+  // code:        `CAT-${c.categoryName?.slice(0, 3).toUpperCase()}`,
   createdAt:   c.createdAt,
   lastUpdated: c.updatedAt || c.createdAt,
 });

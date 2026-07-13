@@ -26,9 +26,9 @@ const navItems = [
   { name: 'Categories', path: '/categories', icon: FolderTree },
   { name: 'Suppliers', path: '/suppliers', icon: Truck },
   { name: 'Transfers', path: '/transfers', icon: ArrowLeftRight },
-  { name: 'Reports', path: '/reports', icon: BarChart3 },
-  { name: 'Users', path: '/users', icon: Users },
-  { name: 'Settings', path: '/settings', icon: Settings },
+  // { name: 'Reports', path: '/reports', icon: BarChart3 },
+  // { name: 'Users', path: '/users', icon: Users },
+  // { name: 'Settings', path: '/settings', icon: Settings },
 ];
 
 const Sidebar = ({ isOpen, onClose }) => {

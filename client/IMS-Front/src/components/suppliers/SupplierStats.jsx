@@ -40,6 +40,7 @@ const SupplierStats = () => {
   }, [suppliers, products]);
 
   // 2. Top Rated Supplier (by performance rating)
+  /*
   const topRatedSupplier = React.useMemo(() => {
     if (suppliers.length === 0) return { name: 'N/A', rating: 0 };
     
@@ -51,6 +52,7 @@ const SupplierStats = () => {
     });
     return top;
   }, [suppliers]);
+  */
 
   // 3. Highest Valuation Supplier
   const topValuedSupplier = React.useMemo(() => {
@@ -68,7 +70,7 @@ const SupplierStats = () => {
   }, [supplierStats]);
 
   // 4. Inactive count warnings
-  const inactiveCount = suppliers.filter(s => s.status?.toLowerCase() === 'inactive').length;
+  // const inactiveCount = suppliers.filter(s => s.status?.toLowerCase() === 'inactive').length;
 
   return (
     <div className="supplier-stats-grid">
@@ -82,6 +84,7 @@ const SupplierStats = () => {
       />
 
       {/* Top Rated Partner */}
+      {/*
       <StatCard
         icon={Star}
         title="Top Rated Vendor"
@@ -93,6 +96,7 @@ const SupplierStats = () => {
         }}
         glowVariant="green"
       />
+      */}
 
       {/* Highest Valuation Supplier */}
       <StatCard
@@ -108,6 +112,7 @@ const SupplierStats = () => {
       />
 
       {/* Inactive count warnings */}
+      {/*
       <StatCard
         icon={ShieldAlert}
         title="Inactive Partnerships"
@@ -119,6 +124,7 @@ const SupplierStats = () => {
         }}
         glowVariant={inactiveCount > 0 ? 'orange' : 'blue'}
       />
+      */}
     </div>
   );
 };

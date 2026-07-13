@@ -2,9 +2,10 @@ import React from 'react';
 import { Star, Edit, Trash2, Mail, Phone, ShoppingBag, DollarSign } from 'lucide-react';
 
 const SupplierCard = ({ supplier, metrics, onCardClick, onEditClick, onDeleteClick }) => {
-  const isInactive = supplier.status?.toLowerCase() === 'inactive';
+  // const isInactive = supplier.status?.toLowerCase() === 'inactive';
   
   // Render rating stars helper
+  /*
   const renderStars = (rating) => {
     const stars = [];
     const floorRating = Math.floor(rating);
@@ -19,6 +20,7 @@ const SupplierCard = ({ supplier, metrics, onCardClick, onEditClick, onDeleteCli
     }
     return <div className="card-stars-row">{stars}</div>;
   };
+  */
 
   const handleCardClick = (e) => {
     // Avoid opening details modal when clicking action buttons
@@ -32,9 +34,11 @@ const SupplierCard = ({ supplier, metrics, onCardClick, onEditClick, onDeleteCli
     <div className="supplier-card glass-card" onClick={handleCardClick}>
       {/* 1. Cover Photo Banner */}
       <div className="card-cover-banner">
+        {/*
         <span className={`badge card-status-badge ${isInactive ? 'badge-inactive' : 'badge-active'}`}>
           {supplier.status}
         </span>
+        */}
       </div>
 
       {/* 2. Floating Avatar Profile Circle */}
@@ -48,27 +52,33 @@ const SupplierCard = ({ supplier, metrics, onCardClick, onEditClick, onDeleteCli
       <div className="card-profile-body">
         {/* Code Badge & Company Name */}
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', marginBottom: '4px' }}>
-          <span className="code-badge" style={{ fontSize: '0.75rem', padding: '2px 6px' }}>{supplier.code}</span>
+          {/* <span className="code-badge" style={{ fontSize: '0.75rem', padding: '2px 6px' }}>{supplier.code}</span> */}
         </div>
         <h3 className="supplier-title-text" style={{ textAlign: 'center', fontSize: '1.15rem' }}>{supplier.name}</h3>
         
         {/* Contact Person */}
+        {/*
         <p className="contact-name-text" style={{ textAlign: 'center', fontSize: '0.85rem', color: 'var(--text-muted)', marginBottom: '8px' }}>
           Partner: {supplier.contactPerson}
         </p>
+        */}
 
         {/* Performance Stars */}
+        {/*
         <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '12px' }}>
           {renderStars(supplier.rating || 0)}
           <span style={{ fontSize: '0.8rem', color: 'var(--text-pure-white)', marginLeft: '6px', fontWeight: '600' }}>
             {supplier.rating?.toFixed(1)}
           </span>
         </div>
+        */}
 
         {/* Business Summary Description */}
+        {/*
         <p className="supplier-description-text" style={{ textAlign: 'center', fontSize: '0.8rem', margin: '0 auto 16px auto', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden', height: '36px', lineHeight: '1.3' }}>
           {supplier.description}
         </p>
+        */}
       </div>
 
       {/* 4. Mini Stats Metrics Panel */}

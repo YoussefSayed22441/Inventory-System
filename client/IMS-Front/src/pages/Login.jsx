@@ -98,7 +98,9 @@ export default function Login() {
 
   /* Signup fields */
   const [signupName, setSignupName] = useState('');
+  const [signupUsername, setSignupUsername] = useState('');
   const [signupEmail, setSignupEmail] = useState('');
+  const [signupPhone, setSignupPhone] = useState('');
   const [signupPassword, setSignupPassword] = useState('');
   const [signupConfirm, setSignupConfirm] = useState('');
   const [showSignupPwd, setShowSignupPwd] = useState(false);
@@ -137,8 +139,10 @@ export default function Login() {
     clearErrors();
     const errs = {};
     if (!signupName.trim()) errs.signupName = 'Full name is required';
+    if (!signupUsername.trim()) errs.signupUsername = 'Username is required';
     if (!signupEmail.trim()) errs.signupEmail = 'Email is required';
     else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(signupEmail)) errs.signupEmail = 'Enter a valid email';
+    if (!signupPhone.trim()) errs.signupPhone = 'Phone number is required';
     if (signupPassword.length < 8) errs.signupPassword = 'At least 8 characters required';
     if (signupConfirm !== signupPassword) errs.signupConfirm = 'Passwords do not match';
     if (Object.keys(errs).length) { setFieldErrors(errs); return; }
@@ -147,7 +151,9 @@ export default function Login() {
     try {
       const data = await authService.register({
         name:            signupName,
+        username:        signupUsername,
         email:           signupEmail,
+        phone:           signupPhone,
         password:        signupPassword,
         confirmPassword: signupConfirm,
       });
@@ -302,6 +308,17 @@ export default function Login() {
               error={fieldErrors.signupName}
             />
             <Field
+              id="signup-username"
+              label="Username"
+              type="text"
+              icon={<UserIcon />}
+              value={signupUsername}
+              onChange={e => setSignupUsername(e.target.value)}
+              placeholder="jsmith88"
+              autoComplete="username"
+              error={fieldErrors.signupUsername}
+            />
+            <Field
               id="signup-email"
               label="Work email"
               type="email"
@@ -311,6 +328,17 @@ export default function Login() {
               placeholder="you@company.com"
               autoComplete="email"
               error={fieldErrors.signupEmail}
+            />
+            <Field
+              id="signup-phone"
+              label="Phone number"
+              type="text"
+              icon={<MailIcon />} // Reusing MailIcon as placeholder or you can use Phone icon if available
+              value={signupPhone}
+              onChange={e => setSignupPhone(e.target.value)}
+              placeholder="+1 (555) 000-0000"
+              autoComplete="tel"
+              error={fieldErrors.signupPhone}
             />
             <Field
               id="signup-password"
