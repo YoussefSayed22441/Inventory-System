@@ -8,6 +8,7 @@ import ProtectedRoute from "./components/auth/ProtectedRoute"
 import Navbar from './layouts/Navbar';
 import Sidebar from './layouts/Sidebar';
 import BackgroundCanvas from './components/ui/BackgroundCanvas';
+import NotificationPanel from './components/ui/NotificationPanel';
 
 import NotFound from "./pages/NotFound";
 import Home from './pages/Home';
@@ -61,6 +62,8 @@ function App() {
           onClick={() => setIsMobileSidebarOpen(false)}
         />
       )}
+
+      {showLayout && <NotificationPanel />}
 
       <div className={showLayout ? "main-content" : "auth-content"}>
         {showLayout && (
