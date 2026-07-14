@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { loginStart, loginSuccess, loginFailure } from '../store/authSlice';
 import authService from '../services/authService';
+import { prepareNewSession } from '../utils/session';
 import '../styles/pages/Login.css';
 
 /* ── icons (inline SVG, no dependency) ─────────────────────────────── */
@@ -151,7 +152,8 @@ export default function Login() {
     dispatch(loginStart());
     try {
       const data = await authService.login({ email: loginEmail, password: loginPassword });
-      // authService.login returns { name, email, token, refreshToken, ... }
+      // Drop previous account's cached inventory/notifications before hydrating new JWT.
+      prepareNewSession(dispatch);
       dispatch(loginSuccess(data));
       navigate('/');
     } catch (err) {
@@ -184,7 +186,8 @@ export default function Login() {
         password:        signupPassword,
         confirmPassword: signupConfirm,
       });
-      // authService.register returns normalized { name, email, token, refreshToken, ... }
+      // Drop previous account's cached data so the new user starts clean.
+      prepareNewSession(dispatch);
       dispatch(loginSuccess(data));
       navigate('/');
     } catch (err) {
