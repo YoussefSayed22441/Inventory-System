@@ -8,25 +8,7 @@ import '../styles/pages/Analytics.css';
 
 /* ─── Mock Data Generators for Dashboard Elements ──────────────────── */
 
-// Generate 90 days of random heatmap data
-const generateHeatmap = () =>
-{
-  const data = [];
-  const now = new Date();
-  for (let i = 0; i < 90; i++)
-  {
-    const d = new Date(now);
-    d.setDate(d.getDate() - (89 - i));
-    const intensity = Math.random() > 0.6 ? Math.floor(Math.random() * 5) : 0;
-    data.push({ date: d, val: intensity });
-  }
-  return data;
-};
-
-// Generate 12 months mock volume data
-const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-const INBOUND = [420, 580, 510, 670, 730, 690, 820, 780, 910, 880, 950, 1030];
-const OUTBOUND = [280, 350, 320, 410, 450, 430, 510, 490, 560, 530, 600, 650];
+import { fetchStockHistory } from '../store/stockHistorySlice';
 
 /* ─── Formatters ───────────────────────────────────────────────────── */
 const fmt$ = (n) =>
@@ -101,12 +83,30 @@ const HeroMetric = ({ totalValue }) =>
 /* ══════════════════════════════════════════════════════════════════
    2. VELOCITY TRACKER (Mixed Combination Chart)
    ══════════════════════════════════════════════════════════════════ */
-const VelocityTracker = () =>
+const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
+const VelocityTracker = ({ stockHistory }) =>
 {
+  const { INBOUND, OUTBOUND } = useMemo(() => {
+    const inbound = new Array(12).fill(0);
+    const outbound = new Array(12).fill(0);
+    const currentYear = new Date().getFullYear();
+    stockHistory.forEach((tx) => {
+      if (!tx.createdAt) return;
+      const d = new Date(tx.createdAt);
+      if (d.getFullYear() === currentYear) {
+        if (tx.type === 0) inbound[d.getMonth()] += tx.quantity;
+        if (tx.type === 1) outbound[d.getMonth()] += tx.quantity;
+      }
+    });
+    return { INBOUND: inbound, OUTBOUND: outbound };
+  }, [stockHistory]);
+
   const CW = 800, CH = 260;
   const PAD = { t: 30, r: 20, b: 30, l: 40 };
   const IW = CW - PAD.l - PAD.r, IH = CH - PAD.t - PAD.b;
-  const maxVal = Math.max(...INBOUND) * 1.1;
+  let maxVal = Math.max(...INBOUND, ...OUTBOUND) * 1.1;
+  if (maxVal === 0) maxVal = 100;
 
   const barW = (IW / 12) * 0.35;
   const gap = (IW / 12);
@@ -193,13 +193,36 @@ const VelocityTracker = () =>
 /* ══════════════════════════════════════════════════════════════════
    3. CAPACITY RINGS (Nested Radial Bar)
    ══════════════════════════════════════════════════════════════════ */
-const CapacityRings = () =>
+const CapacityRings = ({ products }) =>
 {
-  const rings = [
-    { name: 'North Hub', val: 82, r: 80, c: '#FF6B00' },
-    { name: 'South Wing', val: 64, r: 60, c: '#2F80FF' },
-    { name: 'East Depot', val: 45, r: 40, c: '#00ff88' },
-  ];
+  const rings = useMemo(() => {
+    if (!products || products.length === 0) return [];
+    
+    // Group by warehouse
+    const whMap = {};
+    let totalUnits = 0;
+    products.forEach(p => {
+      if (!whMap[p.warehouse]) whMap[p.warehouse] = 0;
+      whMap[p.warehouse] += p.quantity;
+      totalUnits += p.quantity;
+    });
+
+    // Create rings
+    const colors = ['#FF6B00', '#2F80FF', '#00ff88', '#E62E2D'];
+    const rBase = 80;
+    
+    return Object.keys(whMap)
+      .map((whName, i) => {
+        const val = totalUnits > 0 ? Math.round((whMap[whName] / totalUnits) * 100) : 0;
+        return {
+          name: whName || 'Unknown',
+          val,
+          r: rBase - (i * 20),
+          c: colors[i % colors.length]
+        };
+      })
+      .slice(0, 4); // Show top 4 max
+  }, [products]);
 
   return (
     <motion.div
@@ -240,17 +263,47 @@ const CapacityRings = () =>
             </div>
           ))}
         </div>
+        {rings.length === 0 && (
+          <div style={{ textAlign: 'center', color: 'var(--text-muted)', fontSize: '0.85rem', marginTop: '20px' }}>
+            No data available
+          </div>
+        )}
       </div>
     </motion.div>
   );
 };
-
 /* ══════════════════════════════════════════════════════════════════
    4. ACTIVITY HEATMAP
    ══════════════════════════════════════════════════════════════════ */
-const ActivityHeatmap = () =>
+const ActivityHeatmap = ({ stockHistory }) =>
 {
-  const heatmap = useMemo(() => generateHeatmap(), []);
+  const heatmap = useMemo(() => {
+    const data = [];
+    const now = new Date();
+    const map = {};
+
+    stockHistory.forEach((tx) => {
+      if (!tx.createdAt) return;
+      const d = new Date(tx.createdAt).toDateString();
+      map[d] = (map[d] || 0) + 1;
+    });
+
+    for (let i = 0; i < 90; i++)
+    {
+      const d = new Date(now);
+      d.setDate(d.getDate() - (89 - i));
+      const ds = d.toDateString();
+      const count = map[ds] || 0;
+      let intensity = 0;
+      if (count > 0 && count <= 2) intensity = 1;
+      else if (count > 2 && count <= 5) intensity = 2;
+      else if (count > 5 && count <= 10) intensity = 3;
+      else if (count > 10) intensity = 4;
+      
+      data.push({ date: d, val: intensity });
+    }
+    return data;
+  }, [stockHistory]);
 
   // Group into weeks for grid columns (13 weeks roughly)
   const weeks = [];
@@ -324,12 +377,6 @@ const LiveAnomalyFeed = ({ lowStockItems }) =>
     type: i % 3 === 0 ? 'spike' : 'drop'
   }));
 
-  if (anomalies.length < 5)
-  {
-    anomalies.push({ id: 'm1', title: 'Unexpected API Spik...', time: '1h ago', type: 'spike' });
-    anomalies.push({ id: 'm2', title: 'Sync Failure Node 3', time: '2h ago', type: 'drop' });
-  }
-
   return (
     <motion.div
       className="bento-panel panel-anomaly"
@@ -340,7 +387,7 @@ const LiveAnomalyFeed = ({ lowStockItems }) =>
         <span>LIVE ANOMALY FEED</span>
       </div>
       <div className="anomaly-list">
-        {anomalies.map((a, i) => (
+        {anomalies.length > 0 ? anomalies.map((a, i) => (
           <motion.div
             key={a.id} className="anomaly-item"
             initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.8 + i * 0.1 }}
@@ -352,7 +399,11 @@ const LiveAnomalyFeed = ({ lowStockItems }) =>
             </div>
             {a.type === 'spike' ? <TrendingUp size={14} color="#00ff88" /> : <AlertCircle size={14} color="#FF6B00" />}
           </motion.div>
-        ))}
+        )) : (
+          <div style={{ textAlign: 'center', color: 'var(--text-muted)', fontSize: '0.85rem', padding: '20px 0' }}>
+            No anomalies detected
+          </div>
+        )}
       </div>
       <div className="anomaly-footer">
         System monitoring active...
@@ -368,11 +419,13 @@ export default function Analytics()
 {
   const dispatch = useDispatch();
   const { items: products } = useSelector(s => s.inventory);
+  const { items: stockHistory } = useSelector(s => s.stockHistory);
 
   useEffect(() =>
   {
     dispatch(fetchProducts());
     dispatch(fetchNotifications({ pageSize: 10 })); // Keep cache warm just in case
+    dispatch(fetchStockHistory({ pageSize: 2000 }));
   }, [dispatch]);
 
   const stats = useMemo(() =>
@@ -399,9 +452,9 @@ export default function Analytics()
       {/* The Bento Grid Container */}
       <div className="bento-grid">
         <HeroMetric totalValue={stats.totalValue} />
-        <VelocityTracker />
-        <CapacityRings />
-        <ActivityHeatmap />
+        <VelocityTracker stockHistory={stockHistory} />
+        <CapacityRings products={products} />
+        <ActivityHeatmap stockHistory={stockHistory} />
         <LiveAnomalyFeed lowStockItems={stats.lowStock} />
       </div>
     </div>

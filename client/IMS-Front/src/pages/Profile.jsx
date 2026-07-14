@@ -7,9 +7,11 @@ import {
   Package, ArrowLeftRight, CheckCircle, AlertTriangle,
 } from 'lucide-react';
 import { updateUserData } from '../store/authSlice';
+import { fetchStockHistory } from '../store/stockHistorySlice';
 import authService from '../services/authService';
 import { performLogout } from '../utils/session';
 import '../styles/pages/Profile.css';
+import { useEffect, useMemo } from 'react';
 
 /* ── Helpers ──────────────────────────────────────────────────────────────── */
 const formatDate = (iso) => {
@@ -28,20 +30,18 @@ const timeAgo = (iso) => {
   return `${Math.floor(diff / 86400)}d ago`;
 };
 
-/* ── Activity Feed mock data ─────────────────────────────────────────────── */
-const ACTIVITY = [
-  { id: 1, color: 'orange', action: 'Added product "Quantum CPU Core" to North Hub', time: '2026-07-07T11:30:00Z' },
-  { id: 2, color: 'blue',   action: 'Initiated transfer TRN-3829 (Neon Plasma Tubing)',  time: '2026-07-07T09:15:00Z' },
-  { id: 3, color: 'green',  action: 'Approved Purchase Order PO-0042 from Apex Tech',   time: '2026-07-06T16:45:00Z' },
-  { id: 4, color: 'red',    action: 'Deleted supplier "Omega Freight" from directory',  time: '2026-07-05T14:00:00Z' },
-  { id: 5, color: 'blue',   action: 'Updated category thresholds for Electronics',      time: '2026-07-04T10:20:00Z' },
-];
+/* ── Removed mock activity data ──────────────────────────────────────────── */
 
 /* ─────────────────────────────────────────────────────────────────────────── */
 const Profile = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { user } = useSelector((state) => state.auth);
+  const { items: stockHistory, loading: historyLoading } = useSelector((state) => state.stockHistory);
+
+  useEffect(() => {
+    dispatch(fetchStockHistory({ pageSize: 50 })); // fetch recent
+  }, [dispatch]);
 
   // Fallback demo user if not logged in
   const currentUser = user || {
@@ -57,6 +57,36 @@ const Profile = () => {
 
   const displayName = currentUser.name || currentUser.username || 'User';
   const initials = displayName.split(' ').map((n) => n[0]).join('').toUpperCase().slice(0, 2);
+
+  // Process real activity from stock history
+  const userActivities = useMemo(() => {
+    if (!stockHistory || !currentUser) return [];
+    
+    return stockHistory
+      .filter(tx => tx.createdBy === currentUser.name || tx.createdBy === currentUser.username || tx.createdBy === currentUser.email)
+      .slice(0, 8)
+      .map((tx) => {
+        let actionStr = '';
+        let color = 'blue';
+        if (tx.type === 0) { // IN
+          actionStr = `Added ${tx.quantity} units of ${tx.productName}`;
+          color = 'green';
+        } else if (tx.type === 1) { // OUT
+          actionStr = `Dispatched ${tx.quantity} units of ${tx.productName}`;
+          color = 'orange';
+        } else { // ADJUSTMENT
+          actionStr = `Adjusted stock for ${tx.productName} by ${tx.quantity}`;
+          color = 'red';
+        }
+
+        return {
+          id: tx.id,
+          color,
+          action: actionStr,
+          time: tx.createdAt
+        };
+      });
+  }, [stockHistory, currentUser]);
 
   // Password form state
   const [showCurrent, setShowCurrent] = useState(false);
@@ -122,6 +152,9 @@ const Profile = () => {
         currentPassword: pwForm.current,
         newPassword:     pwForm.newPw,
         confirmPassword: pwForm.confirm,
+        fullName: profileForm.name || currentUser.name || 'User',
+        userName: profileForm.username || currentUser.username || 'user',
+        phoneNumber: profileForm.phone || currentUser.phone || ''
       });
       setPwMessage({ type: 'success', text: 'Password updated successfully.' });
       setPwForm({ current: '', newPw: '', confirm: '' });
@@ -357,15 +390,25 @@ const Profile = () => {
           </div>
 
           <div className="activity-feed">
-            {ACTIVITY.map((item) => (
-              <div key={item.id} className="activity-item">
-                <div className={`activity-dot ${item.color}`} />
-                <div className="activity-content">
-                  <div className="activity-action">{item.action}</div>
-                  <div className="activity-time">{timeAgo(item.time)}</div>
-                </div>
+            {historyLoading && userActivities.length === 0 ? (
+              <div style={{ padding: '20px', textAlign: 'center', color: 'var(--text-muted)', fontSize: '0.9rem' }}>
+                Loading activity...
               </div>
-            ))}
+            ) : userActivities.length === 0 ? (
+              <div style={{ padding: '20px', textAlign: 'center', color: 'var(--text-muted)', fontSize: '0.9rem' }}>
+                No recent activity found.
+              </div>
+            ) : (
+              userActivities.map((item) => (
+                <div key={item.id} className="activity-item">
+                  <div className={`activity-dot ${item.color}`} />
+                  <div className="activity-content">
+                    <div className="activity-action">{item.action}</div>
+                    <div className="activity-time">{timeAgo(item.time)}</div>
+                  </div>
+                </div>
+              ))
+            )}
           </div>
         </div>
       </div>

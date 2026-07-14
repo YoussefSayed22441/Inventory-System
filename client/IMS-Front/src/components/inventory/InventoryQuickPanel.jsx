@@ -1,9 +1,17 @@
 import React from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { AlertTriangle, Clock, Truck, BarChart2 } from 'lucide-react';
+import { fetchStockHistory } from '../../store/stockHistorySlice';
+import { useEffect, useMemo } from 'react';
 
 const InventoryQuickPanel = () => {
+  const dispatch = useDispatch();
   const { items } = useSelector((state) => state.inventory);
+  const { items: stockHistory } = useSelector((state) => state.stockHistory);
+
+  useEffect(() => {
+    dispatch(fetchStockHistory({ pageSize: 20 }));
+  }, [dispatch]);
 
   // Extract low stock alerts dynamically from Redux
   const lowStockItems = items.filter((item) => item.quantity > 0 && item.quantity <= 20);
@@ -13,19 +21,28 @@ const InventoryQuickPanel = () => {
   const totalValue = items.reduce((acc, item) => acc + (item.quantity * item.unitPrice), 0);
   const totalUnits = items.reduce((acc, item) => acc + item.quantity, 0);
 
-  // Mock static logs
-  const activityLogs = [
-    { text: 'Chassis SKU-1049 relocated to East Depot', time: '30m ago', color: 'var(--neon-blue-data)' },
-    { text: 'Lithium Power Pack depleted in North Hub', time: '2h ago', color: 'var(--color-danger)' },
-    { text: 'Conveyor Belt SKU-3304 registered by Lead Operator', time: '4h ago', color: 'var(--color-success)' },
-    { text: 'Plasma Tubing count updated in South Wing', time: '1d ago', color: 'var(--neon-orange)' },
-  ];
+  // Real logs from stockHistory
+  const activityLogs = useMemo(() => {
+    if (!stockHistory) return [];
+    return stockHistory.slice(0, 5).map(tx => {
+      let text = '';
+      let color = 'var(--neon-blue-data)';
+      if (tx.type === 0) { text = `Added ${tx.quantity}x ${tx.productName}`; color = 'var(--color-success)'; }
+      else if (tx.type === 1) { text = `Dispatched ${tx.quantity}x ${tx.productName}`; color = 'var(--neon-orange)'; }
+      else { text = `Adjusted ${tx.productName} by ${tx.quantity}`; color = 'var(--color-danger)'; }
+      
+      const diff = (Date.now() - new Date(tx.createdAt)) / 1000;
+      let timeStr = 'just now';
+      if (diff >= 86400) timeStr = `${Math.floor(diff / 86400)}d ago`;
+      else if (diff >= 3600) timeStr = `${Math.floor(diff / 3600)}h ago`;
+      else if (diff >= 60) timeStr = `${Math.floor(diff / 60)}m ago`;
 
-  // Mock shipments
-  const upcomingDeliveries = [
-    { sku: 'SKU-8840', qty: 200, eta: 'Tomorrow', supplier: 'Apex Tech' },
-    { sku: 'SKU-1192', qty: 50, eta: 'Jun 28', supplier: 'Quantum Indus' },
-  ];
+      return { text, time: timeStr, color };
+    });
+  }, [stockHistory]);
+
+  // Removed mock shipments
+  const upcomingDeliveries = [];
 
   return (
     <aside className="inventory-side">
@@ -105,7 +122,7 @@ const InventoryQuickPanel = () => {
           </h3>
         </div>
         <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-          {upcomingDeliveries.map((delivery) => (
+          {upcomingDeliveries.length > 0 ? upcomingDeliveries.map((delivery) => (
             <div 
               key={delivery.sku} 
               style={{ 
@@ -126,7 +143,11 @@ const InventoryQuickPanel = () => {
                 <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>ETA: {delivery.eta}</span>
               </div>
             </div>
-          ))}
+          )) : (
+            <div style={{ fontSize: '0.85rem', color: 'var(--text-muted)', textAlign: 'center', padding: '10px 0' }}>
+              No incoming shipments.
+            </div>
+          )}
         </div>
       </div>
 
@@ -139,7 +160,7 @@ const InventoryQuickPanel = () => {
           </h3>
         </div>
         <div className="activity-list">
-          {activityLogs.map((log, index) => (
+          {activityLogs.length > 0 ? activityLogs.map((log, index) => (
             <div key={index} className="activity-item">
               <div className="activity-indicator" style={{ background: log.color }}></div>
               <div className="activity-details">
@@ -147,7 +168,11 @@ const InventoryQuickPanel = () => {
                 <span className="activity-time">{log.time}</span>
               </div>
             </div>
-          ))}
+          )) : (
+            <div style={{ fontSize: '0.85rem', color: 'var(--text-muted)', textAlign: 'center', padding: '10px 0' }}>
+              No recent activity.
+            </div>
+          )}
         </div>
       </div>
     </aside>

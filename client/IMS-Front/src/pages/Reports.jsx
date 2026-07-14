@@ -7,20 +7,17 @@ import {
 } from 'lucide-react';
 import '../styles/pages/Reports.css';
 
+import { fetchStockHistory } from '../store/stockHistorySlice';
+
 /* ── Helpers ──────────────────────────────────────────────────────────────── */
 const currency = (n) => `$${n.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
 const pct = (n, total) => total > 0 ? ((n / total) * 100).toFixed(1) : 0;
 
-/* ── Month abbreviations for bar chart ───────────────────────────────────── */
-const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul'];
-
-/* ── Mock monthly data ───────────────────────────────────────────────────── */
-const MONTHLY_STOCK_IN  = [32, 45, 38, 62, 55, 48, 70];
-const MONTHLY_STOCK_OUT = [20, 30, 28, 50, 42, 35, 58];
+/* ── Removed mock monthly data ───────────────────────────────────────────── */
 
 /* ── Bar chart component ─────────────────────────────────────────────────── */
 const BarChart = ({ data1, data2, labels }) => {
-  const max = Math.max(...data1, ...data2);
+  const max = Math.max(...data1, ...data2, 10);
   return (
     <div className="bar-chart-wrap">
       {labels.map((label, i) => (
@@ -84,12 +81,40 @@ const DonutChart = ({ segments, value, sub }) => {
 
 /* ─────────────────────────────────────────────────────────────────────────── */
 const Reports = () => {
+  const dispatch = useDispatch();
   const inventoryItems = useSelector((s) => s.inventory.items);
   const suppliers      = useSelector((s) => s.suppliers.items);
   const users          = useSelector((s) => s.users.items);
   const transfers      = useSelector((s) => s.transfers.items);
+  const stockHistory   = useSelector((s) => s.stockHistory.items);
 
   const [lastRefresh] = useState(new Date().toLocaleTimeString());
+
+  React.useEffect(() => {
+    dispatch(fetchStockHistory({ pageSize: 1000 }));
+  }, [dispatch]);
+
+  /* ── Dynamic Monthly Stock ── */
+  const chartData = useMemo(() => {
+    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul'];
+    const stockIn = new Array(7).fill(0);
+    const stockOut = new Array(7).fill(0);
+
+    const now = new Date();
+    // Use last 7 months relative to current date, or just Jan-Jul if we want to keep it simple.
+    // For simplicity, let's map months 0-6 to Jan-Jul.
+    stockHistory.forEach((tx) => {
+      if (!tx.createdAt) return;
+      const d = new Date(tx.createdAt);
+      const mIndex = d.getMonth(); // 0 to 11
+      if (d.getFullYear() === now.getFullYear() && mIndex < 7) {
+        if (tx.type === 0) stockIn[mIndex] += tx.quantity;
+        else if (tx.type === 1) stockOut[mIndex] += tx.quantity;
+      }
+    });
+
+    return { labels: months, stockIn, stockOut };
+  }, [stockHistory]);
 
   /* ── Computed metrics ── */
   const metrics = useMemo(() => {
@@ -213,7 +238,7 @@ const Reports = () => {
               </div>
             ))}
           </div>
-          <BarChart data1={MONTHLY_STOCK_IN} data2={MONTHLY_STOCK_OUT} labels={MONTHS} />
+          <BarChart data1={chartData.stockIn} data2={chartData.stockOut} labels={chartData.labels} />
         </div>
 
         {/* Stock health donut */}
